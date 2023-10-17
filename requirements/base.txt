@@ -1,0 +1,21 @@
+python-slugify==8.0.1 
+Pillow==10.1.0  
+argon2-cffi==23.1.0 
+whitenoise==6.6.0  
+redis==5.0.1 
+hiredis==2.2.3
+uvicorn[standard]==0.23.2 
+
+# Django
+# ------------------------------------------------------------------------------
+django==4.2.6 
+django-environ==0.11.2 
+django-model-utils==4.3.1 
+django-allauth==0.57.0 
+django-crispy-forms==2.1  
+crispy-bootstrap5==0.7 
+django-redis==5.4.0  
+# Django REST Framework
+djangorestframework==3.14.0  
+django-cors-headers==4.3.0 
+drf-spectacular==0.26.5  
