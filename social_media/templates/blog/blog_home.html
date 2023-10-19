@@ -1,10 +1,66 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
-<h1>Blog</h1>
+home blog
 {% endblock %}
 
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        <link href="{% static 'css/blog_home.css' %}" rel="stylesheet" />
+    {% endblock %}
+    <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+</head>
 
 {% block content %}
-<h1>Blog Application is running in this page </h1>
+<div class="container">
+    <main class="content">
+        <a id="new-blog-btn" href="{% url 'create_blog' %}">Create New Blog</a>
+        <h1 id="home-heading">Home</h1>
+        {% for blog in home_blogs %}
+        <div class="blog-post">
+            <h1 class="title">{{blog.title}}</h1>
+            <p class="author">Author: {{blog.author}}</p>
+            <p class="date">Date: {{blog.pub_date}}</p>
+            <div class="body">
+                <p>{{blog.body}}</p>       
+                <!-- Add more content here -->
+            </div>
+            <div class="actions">
+                <div class="likes">
+                    <i class="fa-solid fa-heart fa-lg">10</i>
+                </div>
+                <div class="comments">
+                    <i class="fa-solid fa-comment fa-lg">3</i>
+                </div>
+                <div class="comment-container">
+                    <form action="{% url 'home' %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="comment" id="comment" placeholder="type your comment here..">
+                        <button class="comment-btn" type="submit">Comment</button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+    <aside class="sidebar">
+        <div>
+            <h5>Suggestions</h5>
+            <ul>
+                <li>Suggest1</li>
+                <li>Suggest2</li>
+            </ul>
+        </div>
+    </aside>
+</div>
 {% endblock %}

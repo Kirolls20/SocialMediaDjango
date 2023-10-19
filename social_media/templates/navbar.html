@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="visually-hidden">(current)</span></a>
+              <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">About</a>
@@ -25,18 +25,21 @@
                 <a class="nav-link"
                    href="{% url 'users:detail' request.user.username %}">My Profile</a>
               </li>
-              <li class="nav-item">
+              <ul>
+                
+              </ul>
+              <li class="nav-item" style="float:right;">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'account_logout' %}">Sign Out</a>
               </li>
             {% else %}
               {% if ACCOUNT_ALLOW_REGISTRATION %}
-                <li class="nav-item">
+                <li class="nav-item" style="float:right;">
                   {# URL provided by django-allauth/account/urls.py #}
                   <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
                 </li>
               {% endif %}
-              <li class="nav-item">
+              <li class="nav-item" style="float:right;">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">Signin</a>
               </li>
