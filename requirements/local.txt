@@ -6,7 +6,7 @@ watchfiles==0.21.0
 # Testing
 # ------------------------------------------------------------------------------
 mypy==1.5.1  
-django-stubs[compatible-mypy]==4.2.4  
+django-stubs[compatible-mypy]==4.2.5  
 pytest==7.4.2 
 pytest-sugar==0.9.7 
 djangorestframework-stubs[compatible-mypy]==3.14.3  
