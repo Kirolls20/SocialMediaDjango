@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+home blog
+{% endblock %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/blog_form.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        
+    {% endblock %}
+    <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% block content %}
+      <h1>Update Blog</h1>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Update">
+      </form>
+    {% endblock %}
+</body>

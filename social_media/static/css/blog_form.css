@@ -35,6 +35,12 @@
     outline: none;
 }
 
+.custom-tag-input{
+    width:50%;
+    border: 2px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+}
 .custom-textarea{
     width:100%;
     border: 2px solid #ccc;

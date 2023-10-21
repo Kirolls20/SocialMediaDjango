@@ -21,19 +21,6 @@ class BlogHomeView(TemplateView):
         context['home_blogs'] = Blog.objects.all()
         return context
     
-    # def post(self, request, **kwargs):
-    #     blog_id  = self.kwargs['id']
-    #     blog= Blog.objects.get(id=blog_id)
-    #     print(blog)
-        
-    #     if request.method == 'POST':
-    #         data = request.POST['comment']
-    #         # Assuming you have a Comment model and you want to create a comment
-    #         comment = Comment(comment=data, user=request.user, blog_id=blog)
-            
-    #         comment.save()
-    #         return HttpResponseRedirect(reverse('home',args=(blog_id,)))
-
 class CreateBlogView(CreateView):
     template_name = 'blog/create_blog.html'
     model= Blog
@@ -55,5 +42,35 @@ class BlogDetailView(DetailView):
     model = Blog
     context_object_name= 'blog'
 
-# class BlogUpdateView(UpdateView):
-#     template_name = 'blog/blog_update.html'
+class BlogUpdateView(UpdateView):
+    template_name = 'blog/blog_update.html'
+    model = Blog
+    form_class = CreateBlogForm
+
+    def get_success_url(self,**kwargs):
+        blog = Blog.objects.get(id = self.kwargs['pk'])
+        return reverse('blog_details',args=(blog.id,))
+
+class BlogDeleteView(DeleteView):
+    template_name = 'blog/blog_home.html'
+    model= Blog
+    
+    def get_success_url(self):
+        return reverse('home')
+
+
+class CreateCommentView(TemplateView):
+    template_name = 'blog/blog_home.html'
+
+    def post(self,request,**kwargs):
+        blog= Blog.objects.get(id= self.kwargs['pk'])
+        if request.method == 'POST':
+            comment_data = request.POST['comment']
+            
+            form = Comment(user= request.user,comment=comment_data,blog=blog)
+            form.save()
+            return HttpResponseRedirect(reverse('home'))
+ 
+    
+
+

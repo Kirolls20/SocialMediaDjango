@@ -27,9 +27,36 @@ home blog
         <h1 id="home-heading">Home</h1>
         {% for blog in home_blogs %}
        <div class="blog-post" id="{{blog.id}}">
-            <h1 class="title">{{blog.title}}</h1>
+            <!-- DropDown Menu -->
+            <div class="dropdown">
+                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:white;">
+                    <i class="fa-solid fa-ellipsis-vertical fa-lg" style="color:black;"></i>
+                </button>
+                    <ul class="dropdown-menu">
+                        <!-- Edit Form --> 
+                            <li class="dropdown-item" ><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
+                            <!-- Delete Form  -->
+                            <li class="dropdown-item" id="delete">Delete</li> 
+                    </ul>
+                </div>       
+            <!-- Delete Blog pop up  Container -->
+            <div class="delete-container">
+                <h3>Are You Sure you want to delete '{{blog.title}}' Blog</h3>
+                <form action="{% url 'delete_blog' blog.id %}" method="post">
+                    {% csrf_token%}
+                    <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+                    <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+                    
+                </form> 
+            </div>
+            <!-- Endof the Delete pop up -->
+            <a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">
+                <h1 class="title">{{blog.title}}</h1>
+            </a>
             <p class="author">Author: {{blog.author}}</p>
-            <p class="author">Tags: {% for tag in blog.tags.all%}{{tag}}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% if blog.tags.all %}
+            <p class="author">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}
             <p class="date">Date: {{blog.pub_date}}</p>
             <div class="body">
                 <p>{{blog.body}}</p>       
@@ -40,10 +67,10 @@ home blog
                     <i class="fa-solid fa-heart fa-lg">10</i>
                 </div>
                 <div class="comments">
-                    <i class="fa-solid fa-comment fa-lg">3</i>
+                    <i class="fa-solid fa-comment fa-lg">{{blog.comments.count}}</i>
                 </div>
                 <div class="comment-container">
-                    <form action="{% url 'home' %}" method="post">
+                    <form action="{% url 'create_comment' blog.id %}" method="post">
                         {% csrf_token %}
                         <input type="text" name="comment" id="comment" placeholder="type your comment here..">
                         <button class="comment-btn" type="submit">Comment</button>
@@ -68,14 +95,12 @@ home blog
 
 
 <!-- Bootstrap JS -->
-<script defer
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
+
 <!-- Your stuff: Third-party javascript libraries go here -->
 
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+crossorigin="anonymous"></script>
 <!-- place project specific Javascript in this file -->
     
   <script defer src="{% static 'js/project.js' %}"></script>

@@ -1,5 +1,5 @@
 from django import forms
-
+from taggit.forms import *
 from blog.models import Blog,Author
 
 class CreateBlogForm(forms.ModelForm):
@@ -12,6 +12,15 @@ class CreateBlogForm(forms.ModelForm):
                 'placeholder':'Blog Title',
                 'class':'custom-input' ,
             }))
+    tags = TagField(
+        required=True,
+        label='',
+        widget=forms.widgets.TextInput(
+            attrs={
+                'placeholder':'Add some tags here',
+                'class':'custom-tag-input',
+            }))
+            
     body= forms.CharField(
         required=True,
         label='',
