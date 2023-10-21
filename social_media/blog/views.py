@@ -41,12 +41,19 @@ class CreateBlogView(CreateView):
 
     def form_valid(self,form ):
 
-        form= form.save(commit=False)
-        form.author = Author.objects.get(user=self.request.user)
-
-        form.save()
+        obj= form.save(commit=False)
+        obj.author = Author.objects.get(user=self.request.user)
+        obj.save()
+        form.save_m2m()
         return super().form_valid(form)
     
     def get_success_url(self) -> str:
         return reverse('home')
     
+class BlogDetailView(DetailView):
+    template_name = 'blog/blog_details.html'
+    model = Blog
+    context_object_name= 'blog'
+
+# class BlogUpdateView(UpdateView):
+#     template_name = 'blog/blog_update.html'

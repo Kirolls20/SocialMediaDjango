@@ -26,9 +26,10 @@ home blog
         <a id="new-blog-btn" href="{% url 'create_blog' %}">Create New Blog</a>
         <h1 id="home-heading">Home</h1>
         {% for blog in home_blogs %}
-        <div class="blog-post">
+       <div class="blog-post" id="{{blog.id}}">
             <h1 class="title">{{blog.title}}</h1>
             <p class="author">Author: {{blog.author}}</p>
+            <p class="author">Tags: {% for tag in blog.tags.all%}{{tag}}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <p class="date">Date: {{blog.pub_date}}</p>
             <div class="body">
                 <p>{{blog.body}}</p>       
@@ -63,4 +64,22 @@ home blog
         </div>
     </aside>
 </div>
+{% block javascript %}
+
+
+<!-- Bootstrap JS -->
+<script defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
+        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+<!-- Your stuff: Third-party javascript libraries go here -->
+
+
+<!-- place project specific Javascript in this file -->
+    
+  <script defer src="{% static 'js/project.js' %}"></script>
+  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+
+{% endblock %}
 {% endblock %}

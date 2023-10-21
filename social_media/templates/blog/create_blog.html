@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Create Blog
+{% endblock %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        <link href="{% static 'css/blog_form.css' %}" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+    {% endblock %}
+</head>
+{% block content %}
+<body style="background-color: #f0f0f0;">
+    <div class="blog-form-container">
+        <h1>Create New Blog</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Submit" class="submit-btn">
+        </form>
+    </div>
+</body>
+{% endblock %}

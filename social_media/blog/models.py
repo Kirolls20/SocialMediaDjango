@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from taggit.managers import TaggableManager
 
 from social_media.users.models import User 
 class Author(models.Model):
@@ -12,7 +13,7 @@ class Blog(models.Model):
     author = models.ForeignKey(Author,on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     body= models.TextField()
-    tags= models.CharField(max_length=128)
+    tags= TaggableManager()
     comments = models.ManyToManyField(User,related_name='blog_comments',through='Comment')
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)
     pub_date = models.DateTimeField(auto_now_add = True)

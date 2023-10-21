@@ -1,0 +1,114 @@
+body{
+    background-color: #f0f0f0;
+}
+
+#home-heading{
+    font-size: 50px;
+    font-weight: 700;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#new-blog-btn{
+    padding: 10px 20px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    float:right;
+}
+#new-blog-btn:hover{
+    background-color: #0056b3;
+}
+.container{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin:20px;
+   
+}
+
+.content{
+    flex:2;
+    padding:20px;
+    background-color:#f4f4f4;
+    border: 1px solid #979595c4;
+}
+
+/* styles.css */
+
+.blog-post {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin: 10px;
+    
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.author, .date {
+    font-style: italic;
+    color: #666;
+}
+
+.body {
+    margin-top: 20px;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.likes, .comments {
+    display: flex;
+    align-items: center;
+}
+
+button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.comment-container{
+    margin: 20px;
+}
+.comment-btn{
+
+    font-size: 13px;
+    border-radius: 10px;
+    margin:10px;
+    }
+#comment{
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
+#comment:focus{
+    border: 1px solid #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+.sidebar{
+    flex:1;
+    padding:20px;
+    margin-left:20px;
+    background-color:#ece8e8;
+    border-radius: 15px;
+
+}
