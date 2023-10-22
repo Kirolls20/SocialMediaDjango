@@ -9,8 +9,7 @@ from django.views.generic.edit import CreateView,DeleteView,UpdateView
 
 from blog.models import Blog,Comment,Author
 from blog.forms import CreateBlogForm
-def index(request):
-    return render(request,'blog/blog_home.html',{})
+
 
 class BlogHomeView(TemplateView):
     template_name= 'blog/blog_home.html'
@@ -42,6 +41,22 @@ class BlogDetailView(DetailView):
     model = Blog
     context_object_name= 'blog'
 
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        blog= Blog.objects.get(id= self.kwargs['pk'])
+        context['blog'] = blog
+        context['comments'] = Comment.objects.filter(blog=blog).all
+        return context
+
+    def post(self,request,**kwargs):
+        blog= Blog.objects.get(id=self.kwargs['pk'])
+        if request.method == 'POST':
+            comment_data = request.POST['comment']
+            form = Comment(user= request.user,comment=comment_data,blog=blog)
+            form.save()
+            return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
+
+
 class BlogUpdateView(UpdateView):
     template_name = 'blog/blog_update.html'
     model = Blog
@@ -72,5 +87,19 @@ class CreateCommentView(TemplateView):
             return HttpResponseRedirect(reverse('home'))
  
     
+class LikeView(TemplateView):
+    template_name= 'blog/blog_details.html'
+
+    def post(self,request,**kwargs):
+        blog= Blog.objects.get(id=self.kwargs['pk'])
+        if blog.likes.filter(id=request.user.id).exists():
+            blog.likes.remove(request.user)
+            return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
+            liked = False
+        else:
+            blog.likes.add(request.user)
+            liked =True
+            return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))            
+
 
 

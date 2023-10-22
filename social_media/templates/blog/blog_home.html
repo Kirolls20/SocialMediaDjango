@@ -64,7 +64,15 @@ home blog
             </div>
             <div class="actions">
                 <div class="likes">
-                    <i class="fa-solid fa-heart fa-lg">10</i>
+                    {% if request.user in blog.likes.all %}
+                        <button type="submit" style="background-color: white;">
+                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{blog.likes.all.count}}
+                        {% else %}
+                        <button type="submit" style="background-color: white;">
+                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{blog.likes.all.count}}
+                        {% endif %}                   
                 </div>
                 <div class="comments">
                     <i class="fa-solid fa-comment fa-lg">{{blog.comments.count}}</i>

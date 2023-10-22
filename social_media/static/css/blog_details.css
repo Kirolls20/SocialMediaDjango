@@ -1,0 +1,116 @@
+body{
+    background-color: #f0f0f0;
+}
+
+.delete-container{
+    display: none; /* Initially hide the overlay */
+    margin:0 auto;
+    width: 50%;
+    height: 50%;
+    background: rgba(116, 113, 113, 0.7); /* Semi-transparent background */
+    z-index: 1;
+    justify-content: center;
+    align-items: center;
+}
+#new-blog-btn{
+    padding: 10px 20px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    float:right;
+}
+#new-blog-btn:hover{
+    background-color: #0056b3;
+}
+.container{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin:20px;
+   
+}
+
+.content{
+    flex:4;
+    padding:40px;
+    background-color:#f4f4f4;
+    border: 1px solid #979595c4;
+}
+
+/* styles.css */
+
+.blog-post {
+    background-color: #f9f9f9;
+    padding: 50px;
+    border: 1px solid #ddd;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.author, .date {
+    font-style: italic;
+    color: #666;
+}
+.tag{
+    color:#0056b3;
+    background-color: #d6d0d0;
+    border-radius:10px;
+    padding:5px;
+}
+.body {
+    margin-top: 20px;
+    font-size:large;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.likes, .comments {
+    display: flex;
+    align-items: center;
+}
+
+button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.comment-container{
+    margin: 20px;
+}
+.comment-btn{
+
+    font-size: 13px;
+    border-radius: 10px;
+    margin:10px;
+    }
+#comment{
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+}
+#comment:focus{
+    border: 1px solid #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
