@@ -75,7 +75,15 @@ home blog
                         {% endif %}                   
                 </div>
                 <div class="comments">
-                    <i class="fa-solid fa-comment fa-lg">{{blog.comments.count}}</i>
+                    {% if request.user in blog.comments.all %}
+                        <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
+                            <i class="fa-solid fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none; ">
+                            <i class="fa-regular fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                        </a>
+                    {% endif %}
                 </div>
                 <div class="comment-container">
                     <form action="{% url 'create_comment' blog.id %}" method="post">

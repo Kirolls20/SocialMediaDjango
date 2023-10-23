@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from django.views.generic import TemplateView,ListView,DetailView
 from django.views.generic.edit import CreateView,DeleteView,UpdateView
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.models import Blog,Comment,Author
 from blog.forms import CreateBlogForm
 
@@ -103,3 +103,12 @@ class LikeView(TemplateView):
 
 
 
+class CommentListView(LoginRequiredMixin,TemplateView):
+    template_name= 'blog/blog_comments.html'
+    
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        blog= Blog.objects.get(id=self.kwargs['pk'])
+        context['blog'] = blog
+        context['comments'] = Comment.objects.filter(blog=blog)
+        return context

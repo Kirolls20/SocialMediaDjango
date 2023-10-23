@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+blog details
+{% endblock %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        
+    {% endblock %}
+</head>
+
+{% block content %}
+<body>
+    
+    {% if comments %}
+    <h1>Comments 
+        <h6><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">see the Blog Post </a></h6>
+    </h1>
+    <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+          Comments- {{blog.comments.all.count}}
+        </button>
+        {% for comment in comments %}
+        <button type="button" class="list-group-item list-group-item-action">{{comment.user.username}} - {{comment.comment}}</button>
+        {% endfor %}
+      </div>
+    {% else %}
+    <h1>No Comments for this blog</h1>
+    {% endif %}
+    
+</body>
+{% endblock %}
