@@ -7,7 +7,8 @@ from django.urls import reverse
 from django.views.generic import TemplateView,ListView,DetailView
 from django.views.generic.edit import CreateView,DeleteView,UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from blog.models import Blog,Comment,Author
+from blog.models import Blog,Comment
+from social_media.users.models import User
 from blog.forms import CreateBlogForm
 
 
@@ -28,7 +29,7 @@ class CreateBlogView(CreateView):
     def form_valid(self,form ):
 
         obj= form.save(commit=False)
-        obj.author = Author.objects.get(user=self.request.user)
+        obj.author = self.request.user
         obj.save()
         form.save_m2m()
         return super().form_valid(form)

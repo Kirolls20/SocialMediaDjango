@@ -23,14 +23,14 @@
               <li class="nav-item">
             
                 <a class="nav-link"
-                   href="{% url 'users:detail' request.user.username %}">My Profile</a>
+                   href="{% url 'users:detail' request.user.username request.user.id %}">My Profile</a>
               </li>
               <ul>
                 
               </ul>
               <li class="nav-item" style="float:right;">
                 {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">Sign Out</a>
+                <a class="nav-link" href="{% url 'account_logout' %}">Sign Out {{request.user}}</a>
               </li>
             {% else %}
               {% if ACCOUNT_ALLOW_REGISTRATION %}

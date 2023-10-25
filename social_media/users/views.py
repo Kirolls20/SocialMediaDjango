@@ -4,14 +4,23 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
-
-User = get_user_model()
-
+from .models import User
+# User = get_user_model()
+from blog.models import Blog,Comment
 
 class UserDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'users/user_profile.html'
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk'])
+        context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
+        context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])
+        return context
+
 
 
 user_detail_view = UserDetailView.as_view()

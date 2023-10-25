@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  User:{{ object.username }}
+{% endblock title %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% block css %}
+  <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+          integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+      <link href="{% static 'css/profile.css' %}" rel="stylesheet" />     
+  {% endblock %}
+</head>
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>{{ object.username }}</h2>
+      {% if object.name %}
+        <p>{{ object.name }}</p>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% if object == request.user %}
+    <!-- Action buttons -->
+    <div class="row">
+      <div class="col-sm-12">
+        <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
+        <a class="btn btn-primary"
+           href="{% url 'account_email' %}"
+           role="button">E-Mail</a><br>
+        <!-- Your Stuff: Custom user template urls -->
+      </div>
+      <br>
+      {% if request.user.profile_image %}
+       profile_image
+      {% else %}
+      <img src="{% static 'images/default_profile_pic.jpg'%}"  alt="Profile picture" width="100" height="100" style="padding:10px; border-radius: 50%;">
+      {% endif %}
+    </div>
+    <!-- End Action buttons -->
+  {% endif %}
+</div>
+<div class="btns-container">
+  <button data-page="posts" class="nav-btn">Posts</button>
+  <button data-page="comments" class="nav-btn">Comments</button>
+  <button data-page="likes" class="nav-btn">Likes</button>
+</div>
+<div class="nav-content" id="posts">
+  <main class="content">
+      <h3>User's Posts ({{user_blogs.all.count}})</h3>
+        {% for blog in user_blogs %}
+       <div class="blog-post" id="{{blog.id}}">
+            <!-- DropDown Menu -->
+            <div class="dropdown">
+                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:white;">
+                    <i class="fa-solid fa-ellipsis-vertical fa-lg" style="color:black;"></i>
+                </button>
+                    <ul class="dropdown-menu">
+                        <!-- Edit Form --> 
+                            <li class="dropdown-item" ><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
+                            <!-- Delete Form  -->
+                            <li class="dropdown-item" id="delete">Delete</li> 
+                    </ul>
+                </div>       
+            <!-- Delete Blog pop up  Container -->
+            <div class="delete-container">
+                <h3>Are You Sure you want to delete '{{blog.title}}' Blog</h3>
+                <form action="{% url 'delete_blog' blog.id %}" method="post">
+                    {% csrf_token%}
+                    <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+                    <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+                    
+                </form> 
+            </div>
+            <!-- Endof the Delete pop up -->
+            <a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">
+                <h1 class="title">{{blog.title}}</h1>
+            </a>
+            <p class="author">Author: {{blog.author}}</p>
+            {% if blog.tags.all %}
+            <p class="author">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}
+            <p class="date">Date: {{blog.pub_date}}</p>
+            <div class="body">
+                <p>{{blog.body}}</p>       
+                <!-- Add more content here -->
+            </div>
+            <div class="actions">
+                <div class="likes">
+                    {% if request.user in blog.likes.all %}
+                        <button type="submit" style="background-color: white;">
+                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{blog.likes.all.count}}
+                        {% else %}
+                        <button type="submit" style="background-color: white;">
+                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{blog.likes.all.count}}
+                        {% endif %}                   
+                </div>
+                <div class="comments">
+                    {% if request.user in blog.comments.all %}
+                        <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
+                            <i class="fa-solid fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none; ">
+                            <i class="fa-regular fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="comment-container">
+                    <form action="{% url 'create_comment' blog.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="comment" id="comment" placeholder="type your comment here..">
+                        <button class="comment-btn" type="submit">Comment</button>
+                    </form>
+                </div>     
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+</div>
+<div class="nav-content" id="comments">
+  <div class="list-group">
+    <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+      user's Comments ({{user_comments.all.count}})
+    </button>
+    {% for comment in user_comments %}
+    <button type="button" class="list-group-item list-group-item-action">{{comment.user.username}} - {{comment.comment}}</button>
+    {% endfor %}
+  </div>
+</div>
+<div class="nav-content" id="likes" >
+  <main class="content">
+      <h3>Blogs You Liked ({{user_likes.all.count}})</h3>
+      {% for like in user_likes %}
+     <div class="blog-post" id="{{like.id}}">
+          
+          <a href="{% url 'blog_details' like.id %}" style="text-decoration: none;">
+              <h1 class="title">{{like.title}}</h1>
+          </a>
+          <p class="author">Author: {{like.author}}</p>
+          {% if like.tags.all %}
+          <p class="author">Tags: {% for tag in like.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+          {% endif %}
+          <p class="date">Date: {{like.pub_date}}</p>
+          <div class="body">
+              <p>{{like.body}}</p>       
+              <!-- Add more content here -->
+          </div>        
+              
+      </div>
+      {% endfor %}
+  </main>
+</div>
+
+{% block javascript %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+crossorigin="anonymous"></script>
+<!-- place project specific Javascript in this file -->
+    
+  <script defer src="{% static 'js/project.js' %}"></script>
+  <script defer src="{% static 'js/profile_single_page.js' %}"></script>
+
+  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+{% endblock content %}

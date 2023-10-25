@@ -1,46 +1,22 @@
-body{
-    background-color: #f0f0f0;
-}
-
-#home-heading{
-    font-size: 50px;
-    font-weight: 700;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-.delete-container{
-    display: none; /* Initially hide the overlay */
-    margin:0 auto;
-
-    width: 50%;
-    height: 50%;
-    background: rgba(116, 113, 113, 0.7); /* Semi-transparent background */
-    z-index: 1;
-    justify-content: center;
-    align-items: center;
-}
-#new-blog-btn{
-    padding: 10px 20px;
-    background-color: #007bff; /* Button background color */
-    color: #fff; /* Text color */
-    text-decoration: none;
-    border: none;
+.btns-container{
+    background-color: #cbddcf;
     border-radius: 10px;
+    padding:10px;
+    justify-content: center;
+    justify-items: center;
+}
+.nav-btn{
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
     cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    float:right;
+    border-radius: 5px;
+
 }
-#new-blog-btn:hover{
-    background-color: #0056b3;
-}
-.container{
-    display:flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin:20px;
-   
+
+.nav-content{
+    display:none;
 }
 
 .content{
@@ -60,7 +36,9 @@ body{
     
     border-radius: 10px;
 }
-
+.delete-container{
+    display: none;
+}
 .title {
     font-size: 24px;
     font-weight: bold;
@@ -128,4 +106,3 @@ button {
     border-radius: 15px;
 
 }
-

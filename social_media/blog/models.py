@@ -3,14 +3,14 @@ from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
 
 from social_media.users.models import User 
-class Author(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='authors') # to access the Auther model from user model
+# class Author(models.Model):
+#     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='authors') # to access the Auther model from user model
 
-    def __str__(self):
-        return self.user.username
-    
+#     def __str__(self):
+#         return self.user.username
+
 class Blog(models.Model):
-    author = models.ForeignKey(Author,on_delete=models.CASCADE)
+    author = models.ForeignKey(User,on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     body= models.TextField()
     tags= TaggableManager()

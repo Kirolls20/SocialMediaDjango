@@ -1,6 +1,8 @@
 from django import forms
 from taggit.forms import *
-from blog.models import Blog,Author
+from blog.models import Blog
+# from users.models import User
+
 
 class CreateBlogForm(forms.ModelForm):
     title = forms.CharField(

@@ -1,5 +1,5 @@
+from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -10,9 +10,9 @@ class User(AbstractUser):
     If adding fields that need to be filled at user signup,
     check forms.SignupForm and forms.SocialSignupForms accordingly.
     """
-
+    profile_image = models.ImageField(blank=True,null=True,upload_to="profile_images/")
     # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
+    name = models.CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
 
