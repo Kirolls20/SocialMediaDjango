@@ -1,9 +1,10 @@
+from django import forms
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-
+from .models import UserSocialMeiaLink
 User = get_user_model()
 
 
@@ -39,3 +40,12 @@ class UserSocialSignupForm(SocialSignupForm):
     Default fields will be added automatically.
     See UserSignupForm otherwise.
     """
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model =User
+        fields= ['name','profile_image']
+class SocialMediaLinkForm(forms.ModelForm):
+    model=UserSocialMeiaLink
+    fields =['social_media_chocies','link']
+

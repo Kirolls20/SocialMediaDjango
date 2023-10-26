@@ -36,6 +36,9 @@ blog details
                 <div class="body">
                     <p>{{blog.body}}</p>       
                     <!-- Add more content here -->
+                    {% if blog.image %}
+                        <img src="{{blog.image.url}}" alt="image" class="blog-image">
+                    {% endif %}
                 </div>
                 <div class="actions">
                     <div class="comment-container">

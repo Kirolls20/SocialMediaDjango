@@ -13,6 +13,7 @@ class Blog(models.Model):
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     body= models.TextField()
+    image = models.ImageField(blank=True,null=True,upload_to='blog_images/')
     tags= TaggableManager()
     comments = models.ManyToManyField(User,related_name='blog_comments',through='Comment')
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)

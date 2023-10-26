@@ -1,18 +1,24 @@
 .btns-container{
-    background-color: #cbddcf;
+    background-color:  lightgray;
     border-radius: 10px;
     padding:10px;
+    margin:20px;
     justify-content: center;
-    justify-items: center;
+    text-align: center;
+    width:100%;
 }
 .nav-btn{
-    background-color: #3498db;
+    background-color: #67b8ee;
     color: #fff;
     border: none;
-    padding: 5px 10px;
+    padding: 10px 10px;
     cursor: pointer;
     border-radius: 5px;
+    width:25%;
 
+}
+.nav-btn:hover{
+    background-color: #2a5c7e;
 }
 
 .nav-content{

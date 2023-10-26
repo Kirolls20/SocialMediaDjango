@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
+    
     """
     Default custom user model for social_media.
     If adding fields that need to be filled at user signup,
@@ -15,6 +16,7 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+    
 
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.
@@ -24,3 +26,16 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+        
+    def get_social_media_links(self):
+        return SocialMediaLink.objects.filter(user=self.user)
+class UserSocialMeiaLink(models.Model):
+    SOCIAL_MEIDA=(
+        ('facebook','facebook'),
+        ('instagram','instagram'),
+        ('X','X'),
+    )
+    # Social Media Account
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    social_media_chocies =models.CharField(max_length=28,blank=True,null=True,choices=SOCIAL_MEIDA)
+    link = models.URLField(max_length=255)

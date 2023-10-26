@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
 from .models import User
+from .forms import UserUpdateForm
 # User = get_user_model()
 from blog.models import Blog,Comment
 
@@ -16,6 +17,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
+        context['user']= User.objects.get(id=self.kwargs['pk'])
         context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk'])
         context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
         context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])
@@ -27,8 +29,9 @@ user_detail_view = UserDetailView.as_view()
 
 
 class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'users/user_update.html'
     model = User
-    fields = ["name"]
+    form_class= UserUpdateForm
     success_message = _("Information successfully updated")
 
     def get_success_url(self):
@@ -38,8 +41,6 @@ class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_object(self):
         return self.request.user
 
-
-user_update_view = UserUpdateView.as_view()
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):

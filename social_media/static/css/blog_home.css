@@ -128,4 +128,7 @@ button {
     border-radius: 15px;
 
 }
-
+.blog-image{
+    border-radius: 10px;
+    max-width: fit-content;
+}
