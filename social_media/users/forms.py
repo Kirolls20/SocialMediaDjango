@@ -44,8 +44,11 @@ class UserSocialSignupForm(SocialSignupForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model =User
-        fields= ['name','profile_image']
-class SocialMediaLinkForm(forms.ModelForm):
-    model=UserSocialMeiaLink
-    fields =['social_media_chocies','link']
+        fields= ['name','bio','profile_image']
 
+
+SocialMediaLinkFormSet = forms.modelformset_factory(
+    UserSocialMeiaLink,
+    fields=('platform', 'link'),
+    extra=2,  # Number of empty forms displayed
+    can_delete=True)

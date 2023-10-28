@@ -22,12 +22,12 @@
       <div class="col-sm-12">
         <div class="profile-image">
           {% if user.profile_image %}
-            <img src="{{user.profile_image.url}}" alt="profile-image" style="width:131px; height:131px;border-radius: 50%;"> 
-      {% else %}
-      <img src="{% static 'images/default_profile_pic.jpg'%}"  alt="Profile picture" style="width:auto; border-radius: 50%;">
-      {% endif %}
+          <img src="{{user.profile_image.url}}" alt="profile-image" style="width:131px; height:131px;border-radius: 50%;"> 
+          {% else %}
+          <img src="{% static 'images/default_profile_pic.jpg'%}"  alt="Profile picture" style="width:auto; border-radius: 50%;">
+          {% endif %}
         </div>
-        
+    
         <h2>{{ object.username }}</h2>
       {% if object.name %}
         <p>{{ object.name }}</p>
@@ -41,6 +41,7 @@
       <div class="col-sm-12">
         <a class="btn btn-primary"href="{% url 'account_email' %}"role="button">E-Mail</a><br>
         <a class="btn btn-primary" href="{% url 'users:update' %}">Update Profile</a>
+        <a class="btn btn-primary" href="{% url 'users:social_media_link_form'  %}">Add Social Media Links</a>
         <!-- Your Stuff: Custom user template urls -->
       </div>
       <br>

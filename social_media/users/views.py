@@ -1,11 +1,15 @@
+from django.shortcuts import render,redirect ,HttpResponseRedirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
+from django.views import View
+from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, RedirectView, UpdateView
-from .models import User
-from .forms import UserUpdateForm
+from django.views.generic import DetailView, RedirectView, UpdateView,TemplateView
+from .models import User,UserSocialMeiaLink
+from .forms import UserUpdateForm,SocialMediaLinkFormSet 
+  
 # User = get_user_model()
 from blog.models import Blog,Comment
 
@@ -51,3 +55,36 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class AddSocialMediaLinksView(LoginRequiredMixin, View):
+    template_name = 'users/social_media_forms.html'
+
+    def get(self, request):
+        user = request.user
+        SocialMediaLinkFormSet = forms.modelformset_factory(
+            UserSocialMeiaLink,
+            fields=('platform', 'link'),
+            extra=2,  # Number of empty forms displayed
+            can_delete=True)
+        formset = SocialMediaLinkFormSet(queryset=UserSocialMeiaLink.objects.filter(user=user))
+        return render(request, self.template_name, {'formset': formset})
+
+    def post(self, request):
+        user = request.user
+        SocialMediaLinkFormSet = forms.modelformset_factory(
+            UserSocialMeiaLink,
+            fields=('platform', 'link'),
+            extra=2,  # Number of empty forms displayed
+            can_delete=True)    
+        formset = SocialMediaLinkFormSet(request.POST, queryset=UserSocialMeiaLink.objects.filter(user=user))
+
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.user = user
+                instance.save()
+
+                return reverse("users:detail", args=(user,user.id)) # Error here #
+
+        return render(request, self.template_name, {'formset': formset})

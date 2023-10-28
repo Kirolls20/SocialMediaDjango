@@ -1,15 +1,3 @@
-// /* Project specific Javascript goes here. */
-
-// const blogDiv = document.querySelectorAll('.blog-post')
-
-// blogDiv.forEach(function (div){
-//     div.addEventListener('click',function(){
-//         postId = div.id 
-//         console.log(`Blog ${postId}`);
-//         window.location.href= '/blog/blog_info/'+postId+'/'        
-
-//     })
-// })
 
 const deleteBtn = document.querySelectorAll('#delete');
 const cancelBtns = document.querySelectorAll('#cancel');
@@ -31,3 +19,7 @@ cancelBtns.forEach(function (cancelBtn) {
 });
 
 
+// Profile Page 
+document.querySelector('#setting-btn').addEventListener('click',function(){
+    document.querySelector('.setting-menu').style.display = 'block';
+});
