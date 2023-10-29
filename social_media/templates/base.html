@@ -34,25 +34,7 @@
 <!-- Le javascript
     ================================================== -->
 {# Placed at the top of the document so pages load faster with defer #}
-{% block javascript %}
 
-
-<!-- Bootstrap JS -->
-<script defer
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"></script>
-<!-- Your stuff: Third-party javascript libraries go here -->
-
-
-<!-- place project specific Javascript in this file -->
-
-  
-  <script defer src="{% static 'js/project.js' %}"></script>
-  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
-
-{% endblock %}
 </head>
 <body>
   {% include 'navbar.html' %}
@@ -69,9 +51,10 @@
         </div>
       {% endfor %}
     {% endif %}
+    <body style="background-color:#ebe8e8;">
     {% block content %}
-      <p>Use this document as a way to quick start any new project.</p>
     {% endblock  %}
+  </body>
   </div>
   <!-- /container -->
   {% block modal %}
@@ -87,5 +70,22 @@
     </script>
     {% endcomment %}
   {% endblock inline_javascript %}
+  {% block javascript %}
+<!-- Bootstrap JS -->
+<script defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
+        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+<!-- Your stuff: Third-party javascript libraries go here -->
+
+
+<!-- place project specific Javascript in this file -->
+
+  
+  <script defer src="{% static 'js/project.js' %}"></script>
+  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+
+{% endblock %}
 </body>
 </html>
