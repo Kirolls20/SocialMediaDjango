@@ -23,6 +23,12 @@ home blog
 {% block content %}
 <div class="container">
     <main class="content">
+        <!-- Search by tags  -->
+        <form action="{% url 'search' input='default_value' %}" method="get">
+            <input type="search" name="input" id="input" class="search-input" placeholder="Search by tags or titles">
+            <button type="submit" class="btn btn-info">Search</button>
+        </form>
+        
         <a id="new-blog-btn" href="{% url 'create_blog' %}">Create New Blog</a>
         <h1 id="home-heading">Home</h1>
         {% for blog in home_blogs %}
@@ -102,12 +108,22 @@ home blog
     </main>
     <aside class="sidebar">
         <div>
-            <h5>Suggestions</h5>
+            <h5>Recently Published</h5>
             <ul>
-                <li>Suggest1</li>
-                <li>Suggest2</li>
+                {% for blog in recent_blogs %}
+                    <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">{{blog}}</a></li>
+                {% endfor %}
             </ul>
         </div>
+        <aside class="sidebar">
+            <div>
+                <h5>Trending Tags</h5>
+                <ul>
+                    <li>Django</li>
+                </ul>
+            </div>
+
+        </aside>
     </aside>
 </div>
 {% block javascript %}

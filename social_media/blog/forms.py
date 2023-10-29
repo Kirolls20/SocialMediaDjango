@@ -36,3 +36,10 @@ class CreateBlogForm(forms.ModelForm):
         model=Blog
         fields= ['title','tags','body']
 
+
+class SearchForm(forms.Form):
+    input = forms.CharField(max_length=128,label='',widget=forms.widgets.TextInput(
+        attrs={
+            'placeholder':'Search By Tags',
+        }
+    ))

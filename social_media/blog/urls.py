@@ -10,5 +10,7 @@ urlpatterns = [
     path('delete/<int:pk>/',views.BlogDeleteView.as_view(),name='delete_blog'),
     path('comment/to/<int:pk>/',views.CreateCommentView.as_view(),name='create_comment'),
     path('like/<int:pk>/',views.LikeView.as_view(),name='like'),
-    path('comments/for/<int:pk>/post/',views.CommentListView.as_view(),name='comment_list')
+    path('comments/for/<int:pk>/post/',views.CommentListView.as_view(),name='comment_list'),
+    path('search/<str:input>/all/', views.SearchView.as_view(), name='search'),
+
 ]
