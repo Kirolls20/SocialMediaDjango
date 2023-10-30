@@ -117,10 +117,13 @@ home blog
         </div>
         <aside class="sidebar">
             <div>
-                <h5>Trending Tags</h5>
+                <h6>Trending Tags for the last 7 days</h6>
                 <ul>
-                    <li>Django</li>
+                    {% for tag in trendy_tags %}
+                       <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none;">{{tag}}</a></li>  
+                    {% endfor %}
                 </ul>
+               
             </div>
 
         </aside>

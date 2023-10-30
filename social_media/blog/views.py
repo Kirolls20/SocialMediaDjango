@@ -1,4 +1,7 @@
 from typing import Any
+from django.utils import timezone
+from datetime import timedelta
+
 from django.forms.models import BaseModelForm
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
@@ -11,8 +14,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.models import Blog,Comment
 from social_media.users.models import User
 from blog.forms import CreateBlogForm,SearchForm
-
+from django.db import models
+from django.db.models import Count, F, ExpressionWrapper
 from django.db.models import Q
+from taggit.models import Tag
 class BlogHomeView(TemplateView):
     template_name= 'blog/blog_home.html'
 
@@ -20,7 +25,24 @@ class BlogHomeView(TemplateView):
       
         context = super().get_context_data(**kwargs)
         context['home_blogs'] = Blog.objects.all().order_by('?')
-        context['recent_blogs'] = Blog.objects.all().order_by('-pub_date')[:5]
+        context['recent_blogs'] = Blog.objects.all().order_by('-pub_date')[:4]
+        # Query to get the most repeated tags for last 7 days
+        start_date = timezone.now() - timedelta(days=7)
+        most_repeated_tags = Tag.objects.filter(blog__pub_date__gte=start_date).annotate(
+            tag_count = Count('blog__tags')).order_by('-tag_count')[:3]
+        
+        context['trendy_tags'] = most_repeated_tags
+        return context
+
+class TrendyTagView(TemplateView):
+    template_name = 'blog/trendy_tag.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        tag_name= self.kwargs['tag']
+        context['name'] = tag_name
+        context['blogs_by_tag'] = Blog.objects.filter(tags__name=tag_name).order_by('-pub_date').all()
+        
         return context
     
 class CreateBlogView(CreateView):
