@@ -17,7 +17,7 @@
 </head>
 
 {% block content %}
-  <div class="container">
+  <div class="container" style="background-color:#d8d2d2; padding:20px; border-radius:5px;">
     <div class="row">
       <div class="col-sm-12">
         <div class="profile-image">
@@ -32,17 +32,42 @@
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
+      <h6 class="text-muted">{{user.job_title}}</h6>
+      <p>{{user.bio}}</p>
+      {% if user.about_me %}
+      <div class="card mb-3" style="background-color: #d8d2d2;">
+        <div class="card-header">
+          About Me 
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p style="font-size: medium;">{{user.about_me}}</p>
+          </blockquote>
+        </div>
+      </div>
+      {% endif %}
     </div>
-  </div>
+  </div> <br>
   
   {% if object == request.user %}
     <!-- Action buttons -->
     <div class="row">
       <div class="col-sm-12">
-        <a class="btn btn-primary"href="{% url 'account_email' %}"role="button">E-Mail</a><br>
         <a class="btn btn-primary" href="{% url 'users:update' %}">Update Profile</a>
-        <a class="btn btn-primary" href="{% url 'users:social_media_link_form'  %}">Add Social Media Links</a>
-        <!-- Your Stuff: Custom user template urls -->
+       <!-- Dropdown Menu Settings -->
+       <div class="dropdown" style="display: inline;">
+        <button  type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:0; background-color: inherit; color:black;">
+          <i class="fa-solid fa-gear fa-2xl"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          <li><a class="dropdown-item " href="{% url 'users:social_media_link_form'  %}">Add Social Media Link</a></li>
+          <li><a class="dropdown-item" href="{% url 'account_email' %}">E-mail</a></li>
+          <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change My password</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
       </div>
       <br>
       
@@ -54,7 +79,7 @@
   <button data-page="posts" class="nav-btn">Posts</button>
   <button data-page="comments" class="nav-btn">Comments</button>
   <button data-page="likes" class="nav-btn">Likes</button>
-</div>
+
 <div class="nav-content" id="posts">
   <main class="content">
       <h3>User's Posts ({{user_blogs.all.count}})</h3>

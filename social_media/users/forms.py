@@ -44,7 +44,7 @@ class UserSocialSignupForm(SocialSignupForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model =User
-        fields= ['name','bio','profile_image']
+        fields= ['name','bio','job_title','about_me','profile_image']
 
 
 SocialMediaLinkFormSet = forms.modelformset_factory(

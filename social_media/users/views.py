@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import View
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, RedirectView, UpdateView,TemplateView
+from django.views.generic import ListView,DetailView, RedirectView, UpdateView,TemplateView
 from .models import User,UserSocialMeiaLink
 from .forms import UserUpdateForm,SocialMediaLinkFormSet 
   
@@ -88,3 +88,12 @@ class AddSocialMediaLinksView(LoginRequiredMixin, View):
                 return reverse("users:detail", args=(user,user.id)) # Error here #
 
         return render(request, self.template_name, {'formset': formset})
+
+
+class UsersListView(LoginRequiredMixin,TemplateView):
+    template_name = 'users/users_list.html'
+    
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.exclude(username=self.request.user).all()
+        return context

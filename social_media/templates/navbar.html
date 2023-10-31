@@ -1,3 +1,4 @@
+{% load static %}
 <div class="mb-1">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container-fluid">
@@ -12,22 +13,27 @@
         </button>
         <a class="navbar-brand" href="#">social_media</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
             </li>
             {% if request.user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Users</a>
+              <a class="nav-link" href="{% url 'users:users_list' %}">Users</a>
             </li>
-              <li class="nav-item">
+            </ul>
+
+              <li style="float:right;">
                 <a class="nav-link"
-                   href="{% url 'users:detail' request.user.username request.user.id %}">My Profile</a>
+                   href="{% url 'users:detail' request.user.username request.user.id %}">
+                  {% if request.user.profile_image %}
+                    <img src="{{request.user.profile_image.url}}" style="width:35px; height:35px; border-radius: 50%; float:right;" alt="">
+                  {% else %}
+                    <img src="{% static 'images/default_profile_pic.jpg' %}"   style="width:35px; height:35px; border-radius: 50%; float:right;" alt="">
+                  {% endif %}
+                  </a>
               </li>
-              <li class="nav-item" style="float:right;">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">Sign Out {{request.user}}</a>
-              </li>
+              
             {% else %}
               {% if ACCOUNT_ALLOW_REGISTRATION %}
                 <li class="nav-item" style="float:right;">
@@ -40,7 +46,7 @@
                 <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">Signin</a>
               </li>
             {% endif %}
-          </ul>
+
         </div>
       </div>
     </nav>
