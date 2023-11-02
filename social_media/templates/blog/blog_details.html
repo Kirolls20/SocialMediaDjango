@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load hitcount_tags  %}
 {% block title %}
 blog details
 {% endblock %}
@@ -29,6 +29,7 @@ blog details
                 </a>
                 <h1 class="title">{{blog.title}}</h1>
                 <p class="author">Author: {{blog.author}}</p>
+                <p class="date"> Views: {{ hitcount.total_hits }}</p>
                 {% if blog.tags.all %}
                 <p class="author">Tags: {% for tag in blog.tags.all%}{{tag}}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
                 {% endif %}

@@ -18,6 +18,8 @@ from django.db import models
 from django.db.models import Count, F, ExpressionWrapper
 from django.db.models import Q
 from taggit.models import Tag
+
+from hitcount.views import HitCountDetailView
 class BlogHomeView(TemplateView):
     template_name= 'blog/blog_home.html'
 
@@ -61,10 +63,11 @@ class CreateBlogView(CreateView):
     def get_success_url(self) -> str:
         return reverse('home')
     
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin,HitCountDetailView):
     template_name = 'blog/blog_details.html'
     model = Blog
     context_object_name= 'blog'
+    count_hit = True
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
