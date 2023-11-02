@@ -1,8 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericRelation
+from social_media.users.models import User 
+# Tag Manager Package 
 from taggit.managers import TaggableManager
 
-from social_media.users.models import User 
+# Hitcount to count the views
+from hitcount.models import HitCountMixin,HitCount
+
 # class Author(models.Model):
 #     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='authors') # to access the Auther model from user model
 
@@ -15,6 +20,9 @@ class Blog(models.Model):
     body= models.TextField()
     image = models.ImageField(blank=True,null=True,upload_to='blog_images/')
     tags= TaggableManager()
+    # Hit count filed 
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_p',
+        related_query_name='hit_count_generic_relation')
     comments = models.ManyToManyField(User,related_name='blog_comments',through='Comment')
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)
     pub_date = models.DateTimeField(auto_now_add = True)

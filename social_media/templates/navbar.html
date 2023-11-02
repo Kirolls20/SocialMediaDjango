@@ -1,6 +1,6 @@
 {% load static %}
 <div class="mb-1">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" style="padding:3px;">
       <div class="container-fluid">
         <button class="navbar-toggler navbar-toggler-right"
                 type="button"
@@ -22,32 +22,32 @@
               <a class="nav-link" href="{% url 'users:users_list' %}">Users</a>
             </li>
             </ul>
-
-              <li style="float:right;">
+              <ul style="float:right;">
+              <li>
                 <a class="nav-link"
                    href="{% url 'users:detail' request.user.username request.user.id %}">
                   {% if request.user.profile_image %}
-                    <img src="{{request.user.profile_image.url}}" style="width:35px; height:35px; border-radius: 50%; float:right;" alt="">
+                    <img src="{{request.user.profile_image.url}}" style="width:35px; height:35px; border-radius: 50%; float:right; border:1px solid #000;" alt="">
                   {% else %}
-                    <img src="{% static 'images/default_profile_pic.jpg' %}"   style="width:35px; height:35px; border-radius: 50%; float:right;" alt="">
+                    <img src="{% static 'images/default_profile_pic.jpg' %}"   style="width:35px; height:35px; border-radius: 50%; float:right; border:1px solid #000;" alt="">
                   {% endif %}
                   </a>
               </li>
               
             {% else %}
               {% if ACCOUNT_ALLOW_REGISTRATION %}
-                <li class="nav-item" style="float:right;">
-                  {# URL provided by django-allauth/account/urls.py #}
+                <li class="nav-item">
+                  {# URL provided by django-allauth/account/urls.py #};
                   <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
                 </li>
               {% endif %}
-              <li class="nav-item" style="float:right;">
+              <li class="nav-item">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">Signin</a>
               </li>
-            {% endif %}
-
+              {% endif %}
+            </ul>
+          </div>
         </div>
-      </div>
     </nav>
   </div>

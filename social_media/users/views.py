@@ -97,3 +97,18 @@ class UsersListView(LoginRequiredMixin,TemplateView):
         context = super().get_context_data(**kwargs)
         context['users'] = User.objects.exclude(username=self.request.user).all()
         return context
+
+class UserSearchView(LoginRequiredMixin,TemplateView):
+    template_name = 'users/search_users_result.html'
+
+    def get(self,*args,**kwargs):
+        if self.request.method == 'GET':
+            search_input = self.request.GET.get('input')
+            if search_input:
+                results = User.objects.filter(username=search_input).all()
+                return render(self.request,self.template_name,{'results':results})
+            else:
+                return reverse('search_users',args=['', 'all'])
+
+            
+

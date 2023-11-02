@@ -14,34 +14,16 @@ home blog
             crossorigin="anonymous"
             referrerpolicy="no-referrer" />
         <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-        <!-- This is custom css static file  -->
-        <style>
-          .search-input{
-              width: 50%;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-              font-size: 16px;
-              font-family: Arial, sans-serif;
-          }
-          .search-input:focus{
-              border: 1px solid #007bff;
-              box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-              outline: none;
-          }
-        </style>
+       
     {% endblock %}
     <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
 </head>
 
 {% block content %}
-{% if users %}
+{% if results %}
 <h1>Users</h1>
-<form action="{% url 'users:search_users' input='default_value' %}" method="get">
-  <input type="search" name="input" id="input" class="search-input" placeholder="Search Users">
-  <button type="submit" class="btn btn-info">Search</button>
-</form>
 <div class="card mb-3" style="max-width: 500px;border-radius: 10px; height: auto;">
-  {% for user in users %}
+  {% for user in results %}
   <div class="row g-0">
       <div class="col-md-4">
         {% if user.profile_image %}
