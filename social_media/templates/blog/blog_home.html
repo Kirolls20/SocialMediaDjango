@@ -72,27 +72,26 @@ home blog
                 {% endif %}
             </div>
             <div class="actions">
-                <div class="likes">
-                    {% if request.user in blog.likes.all %}
-                        <button type="submit" style="background-color: white;">
-                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
-                        </button> {{blog.likes.all.count}}
+                <div class="blog-details">
+                    <button  style="background-color: aliceblue; border:0;" id="like-button" data-blog-id="{{ blog.id }}" data-csrf-token="{% csrf_token %}">
+                       {% if request.user in blog.likes.all %}
+                        <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
                         {% else %}
-                        <button type="submit" style="background-color: white;">
-                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
-                        </button> {{blog.likes.all.count}}
-                        {% endif %}                   
-                </div>
-                <div class="comments">
-                    {% if request.user in blog.comments.all %}
+                        <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                        {% endif %}
+                    </button>
+                    <span id="likes-count">{{ likes_count }}</span> 
+                    <div class="comments" style="display: inline; margin-left:10px;"> 
+                        {% if request.user in blog.comments.all %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
-                            <i class="fa-solid fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-solid fa-comment fa-2xl"></i>{{blog.comments.all.count}}
                         </a>
-                    {% else %}
+                        {% else %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none; ">
-                            <i class="fa-regular fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-regular fa-comment fa-2xl"></i>{{blog.comments.all.count}}
                         </a>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="comment-container">
                     <form action="{% url 'create_comment' blog.id %}" method="post">
@@ -101,9 +100,8 @@ home blog
                         <button class="comment-btn" type="submit">Comment</button>
                     </form>
                 </div>
-                
             </div>
-        </div>
+            </div>
         {% endfor %}
     </main>
     <aside class="sidebar">
@@ -136,12 +134,15 @@ home blog
 
 <!-- Your stuff: Third-party javascript libraries go here -->
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
 crossorigin="anonymous"></script>
 <!-- place project specific Javascript in this file -->
-    
+
+  <script src="{% static 'js/like.js' %}"></script>
   <script defer src="{% static 'js/project.js' %}"></script>
+  
   <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
 
 {% endblock %}

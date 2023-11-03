@@ -25,6 +25,8 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk'])
         context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
         context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])
+        if len(context['user_blogs']) == 0 :
+            context['new_profile'] = 'New Profile\nYou did not published anything yet'
         return context
 
 

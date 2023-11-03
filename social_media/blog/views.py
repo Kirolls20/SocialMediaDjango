@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from django.forms.models import BaseModelForm
 from django.shortcuts import render,redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.urls import reverse
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView,ListView,DetailView
@@ -18,6 +18,11 @@ from django.db import models
 from django.db.models import Count, F, ExpressionWrapper
 from django.db.models import Q
 from taggit.models import Tag
+# These for ajax action in like button
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt # To disable the CSRF token in likeView 
+from django.utils.decorators import method_decorator # To apply the csrf_exempt decorator
+
 
 from hitcount.views import HitCountDetailView
 class BlogHomeView(TemplateView):
@@ -114,20 +119,20 @@ class CreateCommentView(TemplateView):
             form.save()
             return HttpResponseRedirect(reverse('home'))
  
-    
-class LikeView(TemplateView):
-    template_name= 'blog/blog_details.html'
 
-    def post(self,request,**kwargs):
-        blog= Blog.objects.get(id=self.kwargs['pk'])
+
+# @method_decorator(login_required, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
+class LikeView(LoginRequiredMixin,View):
+    def post(self, request, **kwargs):
+        blog = Blog.objects.get(id=self.kwargs['pk'])
         if blog.likes.filter(id=request.user.id).exists():
             blog.likes.remove(request.user)
-            return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
             liked = False
         else:
             blog.likes.add(request.user)
-            liked =True
-            return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))            
+            liked = True
+        return JsonResponse({'liked': liked, 'likes_count': blog.likes.count()})
 
 
 
