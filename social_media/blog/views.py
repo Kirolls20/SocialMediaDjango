@@ -2,6 +2,7 @@ from typing import Any
 from django.utils import timezone
 from datetime import timedelta
 
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms.models import BaseModelForm
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
@@ -52,10 +53,11 @@ class TrendyTagView(TemplateView):
         
         return context
     
-class CreateBlogView(CreateView):
+class CreateBlogView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
     template_name = 'blog/create_blog.html'
     model= Blog
     form_class = CreateBlogForm
+    success_message = ("New blog post has been created created!!")
 
     def form_valid(self,form ):
 
@@ -90,19 +92,33 @@ class BlogDetailView(LoginRequiredMixin,HitCountDetailView):
             return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
     template_name = 'blog/blog_update.html'
     model = Blog
     form_class = CreateBlogForm
+    success_message = ("The blog post has been Updated successfully!")
+
+    def form_valid(self,form ):
+
+        obj= form.save(commit=False)
+        obj.author = self.request.user
+        obj.save()
+        form.save_m2m()
+        return super().form_valid(form)
 
     def get_success_url(self,**kwargs):
         blog = Blog.objects.get(id = self.kwargs['pk'])
         return reverse('blog_details',args=(blog.id,))
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
     template_name = 'blog/blog_home.html'
     model= Blog
+    success_message = ("The blog post was successfully deleted.")
     
+    # def delete(self,request,*args,**kwargs):
+    #     messages.success(self.request,'The blog post was successfully deleted.')
+    #     return super().delete(request,*args,**kwargs)
+
     def get_success_url(self):
         return reverse('home')
 

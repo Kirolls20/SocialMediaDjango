@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-home blog
+Update Blog
 {% endblock %}
 
 <head>
@@ -23,7 +23,7 @@ home blog
 <body>
     {% block content %}
       <h1>Update Blog</h1>
-      <form action="" method="post">
+      <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{form}}
         <input type="submit" value="Update">

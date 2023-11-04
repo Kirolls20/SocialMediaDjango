@@ -21,8 +21,7 @@ class Blog(models.Model):
     image = models.ImageField(blank=True,null=True,upload_to='blog_images/')
     tags= TaggableManager()
     # Hit count filed 
-    hit_count_generic = GenericRelation(HitCount, object_id_field='object_p',
-        related_query_name='hit_count_generic_relation')
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
     comments = models.ManyToManyField(User,related_name='blog_comments',through='Comment')
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)
     pub_date = models.DateTimeField(auto_now_add = True)

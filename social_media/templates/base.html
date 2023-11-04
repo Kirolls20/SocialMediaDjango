@@ -38,24 +38,24 @@
 </head>
 <body>
   {% include 'navbar.html' %}
-  
-  <div class="container">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-          {{ message }}
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"></button>
-        </div>
-      {% endfor %}
-    {% endif %}
-    <body style="background-color:#ebe8e8;">
-    {% block content %}
-    {% endblock  %}
-  </body>
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}" style="justify-content: center; text-align: center; align-items: center;">
+      {{ message }}
+      <button type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+{% block content %}
+{% endblock  %}
+  <body style="background-color:#ebe8e8;">
+    <div class="container" >
+     
   </div>
+  </body>
   <!-- /container -->
   {% block modal %}
   {% endblock modal %}
