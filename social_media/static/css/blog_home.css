@@ -3,17 +3,6 @@
     font-weight: 700;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.delete-container{
-    display: none; /* Initially hide the overlay */
-    margin:0 auto;
-
-    width: 50%;
-    height: 50%;
-    background: rgba(116, 113, 113, 0.7); /* Semi-transparent background */
-    z-index: 1;
-    justify-content: center;
-    align-items: center;
-}
 #new-blog-btn{
     padding: 10px 20px;
     background-color: #007bff; /* Button background color */
@@ -31,62 +20,6 @@
 #new-blog-btn:hover{
     background-color: #0056b3;
 }
-.container{
-    display:flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin:20px;
-   
-}
-
-.content{
-    flex:3;
-    padding:20px;
-    background-color:#f4f4f4;
-    border: 1px solid #979595c4;
-}
-
-/* styles.css */
-
-.blog-post {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #ddd;
-    margin: 10px;
-    
-    border-radius: 10px;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.author, .date {
-    font-style: italic;
-    color: #666;
-}
-.tag{
-    color:#0056b3;
-    background-color: #d6d0d0;
-    border-radius:10px;
-    padding:5px;
-}
-.body {
-    margin-top: 20px;
-}
-
-.actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.likes, .comments {
-    display: flex;
-    align-items: center;
-}
-
 button {
     background-color: #3498db;
     color: #fff;
@@ -98,7 +31,6 @@ button {
     margin: 20px;
 }
 .comment-btn{
-
     font-size: 13px;
     border-radius: 10px;
     margin:10px;
@@ -116,14 +48,7 @@ button {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     outline: none;
 }
-.sidebar{
-    flex:1;
-    padding:20px;
-    margin-left:20px;
-    background-color:#ece8e8;
-    border-radius: 15px;
 
-}
 .blog-image{
     border-radius: 10px;
     max-width: fit-content;
@@ -141,3 +66,133 @@ button {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     outline: none;
 }
+/* Add the following CSS to your stylesheet */
+
+/* Styles for the left column (feed) */
+.left-column {
+    flex: 1;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  
+  /* Styles for blog posts in the feed */
+  .blog-post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+  .profile-image{
+    width:40px;
+    height:40px;
+    display:inline-block;
+    border-radius: 50%;
+}
+  
+  .author, .date {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+  }
+  a{
+    text-decoration: none;
+    font-weight: bold;
+    color:rgb(37, 37, 37);
+  }
+
+  
+  .tag {
+    color: #0056b3;
+    background-color: #d6d0d0;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  
+  .body {
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Styles for the right column (sidebar) */
+  .right-column {
+    flex: 1;
+    padding: 20px;
+    background-color: #ece8e8;
+    border: 1px solid #ddd;
+  }
+  
+  /* Media query for responsiveness */
+  @media screen and (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .left-column {
+      flex: 1;
+      margin-right: 0;
+    }
+  
+    .right-column {
+      flex: 1;
+    }
+    #new-blog-btn{
+      margin-top: 10px;
+    }
+  }
+  /* Styling for dropdown menus */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  /* Styling for delete confirmation container */
+  .delete-container {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    position: absolute;
+    z-index: 2;
+    width: 80%;
+    margin: 0 auto;
+    top: 10%;
+    left: 10%;
+    text-align: center;
+  }
+  
+  /* Media query for delete confirmation container */
+  @media screen and (max-width: 768px) {
+    .delete-container {
+      width: 90%;
+      left: 5%;
+    }
+  }
+  
+  /* Show delete container when #delete is clicked */
+  #delete:hover + .delete-container {
+    display: block;
+  }
+  
+  /* Additional styling for images */
+  .blog-image {
+    max-width: 100%;
+    height: auto;
+  }
+  

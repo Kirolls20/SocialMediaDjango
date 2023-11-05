@@ -23,3 +23,4 @@ cancelBtns.forEach(function (cancelBtn) {
 document.querySelector('#setting-btn').addEventListener('click',function(){
     document.querySelector('.setting-menu').style.display = 'block';
 });
+

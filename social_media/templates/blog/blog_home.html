@@ -21,9 +21,9 @@ home blog
 </head>
 
 {% block content %}
-<div class="container">
-    <main class="content">
-        <!-- Search by tags  -->
+    <main class="container">
+        <section class="left-column">
+            <!-- Search by tags  -->
         <form action="{% url 'search' input='default_value' %}" method="get">
             <input type="search" name="input" id="input" class="search-input" placeholder="Search by tags or titles">
             <button type="submit" class="btn btn-info">Search</button>
@@ -59,16 +59,37 @@ home blog
             <a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">
                 <h1 class="title">{{blog.title}}</h1>
             </a>
-            <p class="author">Author: {{blog.author}}</p>
+            <h6 class="author">
+                {% if request.user.profile_image %}
+                    <img class="profile-image" src="{{request.user.profile_image.url }}" alt="{{request.user}}">
+                {% else %}
+                    <img src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+                {% endif %} 
+                <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
+            </h6>
+            
             {% if blog.tags.all %}
             <p class="author">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
             <p class="date">Date: {{blog.pub_date}}</p>
             <div class="body">
-                <p>{{blog.body}}</p>       
+                {% with max_length=200 %}  <!--Set desired Charachter limits -->
+                    {% if blog.body|length > max_length %}
+                        <div class="truncated-text">
+                            {{blog.body|safe|slice:max_length}} ...
+                            <a href="" class="read-more-link">Read More</a>
+                        </div>       
+                        <div class="full-text" style="display:none">{{blog.body|safe}}</div>
+                        <a href="" class="read-less-link" style="display: none;"> ...Read less</a>
                 <!-- Add more content here -->
+                    {% else %}
+                    {{blog.body|safe}}
+                    {% endif %}
+                {% endwith %}
                 {% if blog.image %}
+                <div class="image-container">
                     <img src="{{blog.image.url}}" alt="image" class="blog-image">
+                </div>
                 {% endif %}
             </div>
             <div class="actions">
@@ -103,30 +124,29 @@ home blog
             </div>
             </div>
         {% endfor %}
-    </main>
-    <aside class="sidebar">
-        <div>
-            <h5>Recently Published</h5>
-            <ul>
-                {% for blog in recent_blogs %}
+        </section>
+        
+        <section class="right-column">
+            <div>
+                <h5>Recently Published</h5>
+                <ul>
+                    {% for blog in recent_blogs %}
                     <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">{{blog}}</a></li>
-                {% endfor %}
+                    {% endfor %}
             </ul>
         </div>
-        <aside class="sidebar">
+        
             <div>
                 <h6>Trending Tags for the last 7 days</h6>
                 <ul>
                     {% for tag in trendy_tags %}
-                       <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none;">{{tag}}</a></li>  
+                    <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none;">{{tag}}</a></li>  
                     {% endfor %}
                 </ul>
-               
-            </div>
+            </div>        
+        </section>
+    </main>
 
-        </aside>
-    </aside>
-</div>
 {% block javascript %}
 
 
@@ -139,11 +159,11 @@ home blog
 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
 crossorigin="anonymous"></script>
 <!-- place project specific Javascript in this file -->
+<script src="{% static 'js/read_more.js' %}"></script>
+<script src="{% static 'js/like.js' %}"></script>
+<script defer src="{% static 'js/project.js' %}"></script>
 
-  <script src="{% static 'js/like.js' %}"></script>
-  <script defer src="{% static 'js/project.js' %}"></script>
-  
-  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
 
 {% endblock %}
 {% endblock %}

@@ -34,7 +34,7 @@ class CreateBlogForm(forms.ModelForm):
   
     class Meta:
         model=Blog
-        fields= ['title','tags','body']
+        fields= ['title','tags','body','image']
 
 
 class SearchForm(forms.Form):
