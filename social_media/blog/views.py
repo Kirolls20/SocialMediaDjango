@@ -1,7 +1,7 @@
 from typing import Any
 from django.utils import timezone
 from datetime import timedelta
-
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms.models import BaseModelForm
 from django.shortcuts import render,redirect
@@ -12,7 +12,7 @@ from django.views.generic import TemplateView,ListView,DetailView
 from django.views.generic.edit import CreateView,DeleteView,UpdateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from blog.models import Blog,Comment
+from blog.models import Blog,Comment,Bookmark
 from social_media.users.models import User
 from blog.forms import CreateBlogForm,SearchForm
 from django.db import models
@@ -175,6 +175,25 @@ class SearchView(TemplateView):
                 return render(self.request,self.template_name,{'qs_results':qs_results})
             else:
                 return reverse('search', args=['', 'all']) 
+
+class AddBookmarkView(LoginRequiredMixin,SuccessMessageMixin,View):
+
+
+    def post(self,request,**kwargs):
+        user= self.request.user
+        blog = Blog.objects.get(id= self.kwargs['pk'])
+        if self.request.method == 'POST':
+            bookmark_date = request.POST['bookmark']
+            bookmark, created = Bookmark.objects.get_or_create(user=user,blog=blog)
+            if created:
+                messages.success(self.request,'Bookmark saved in your  save list ')
+                return HttpResponseRedirect(reverse('home'))
+            else:
+                messages.warning(self.request,'You already bookedmark this blog.')
+                return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
+
+            
+
 
 
 

@@ -13,5 +13,6 @@ urlpatterns = [
     path('comments/for/<int:pk>/post/',views.CommentListView.as_view(),name='comment_list'),
     path('search/<str:input>/all/', views.SearchView.as_view(), name='search'),
     path('tags/<str:tag>',views.TrendyTagView.as_view(),name='trendy_tags'),
-
+    path('<int:pk>/bookmark/',views.AddBookmarkView.as_view(),name='bookmark'),
+    
 ]

@@ -46,4 +46,20 @@ class Comment(models.Model):
         return f"{self.comment} by {self.user.username}"
 
 
+class Bookmark(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog,on_delete=models.CASCADE)
+    # comments = models.ForeignKey(Comment, blank=True,null=True,on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user','blog')
+
+    def __str__(self):
+        return self.blog.title
+
+    def bookmark_count(self):
+        return self.count()
+
+    
 

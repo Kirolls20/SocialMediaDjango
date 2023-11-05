@@ -61,7 +61,12 @@ blog details
                         </a>
                         {% endif %}
                     </div>
-                    <i class="fa-regular fa-bookmark fa-xl" style="margin-left:10px;"></i>
+                    <form action="{% url 'bookmark' blog.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="bookmark">
+                            <i class="fa-regular fa-bookmark fa-xl" style="margin-left:10px;"></i>
+                        </button>
+                    </form>
                 </div>
                 <hr>
                 <div class="body">
