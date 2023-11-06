@@ -1,3 +1,9 @@
+:root{
+  --mainFontColor:white;
+  --mianBackgroundColor:#000;
+  --secondaryBackgroundcolor:#1d1c1c;
+}
+
 #home-heading{
     font-size: 50px;
     font-weight: 700;
@@ -67,13 +73,14 @@ button {
     outline: none;
 }
 /* Add the following CSS to your stylesheet */
-
-/* Styles for the left column (feed) */
-.left-column {
-    flex: 1;
+.container{
+  display: flex;
+}
+.med-column {
+    flex: 3;
     margin-right: 20px;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color:var(--mianBackgroundColor);
     border: 1px solid #ddd;
     border-radius: 10px;
   }
@@ -83,10 +90,11 @@ button {
     border: 1px solid #ddd;
     padding: 10px;
     margin-bottom: 20px;
-    background-color: #fff;
+    background-color: var(--mianBackgroundColor);
     border-radius: 10px;
+    color:var(--mainFontColor);
   }
-  
+  .title,.author,date,
   .title {
     font-size: 24px;
     font-weight: bold;
@@ -107,7 +115,7 @@ button {
   a{
     text-decoration: none;
     font-weight: bold;
-    color:rgb(37, 37, 37);
+    color:var(--mainFontColor);
   }
 
   
@@ -115,7 +123,7 @@ button {
     color: #0056b3;
     background-color: #d6d0d0;
     border-radius: 10px;
-    padding: 5px;
+    padding: 3px;
   }
   
   .body {
@@ -126,10 +134,23 @@ button {
   /* Styles for the right column (sidebar) */
   .right-column {
     flex: 1;
-    padding: 20px;
-    background-color: #ece8e8;
-    border: 1px solid #ddd;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: var(--mianBackgroundColor);
+  
+    color:var(--mainFontColor);
+    
   }
+  .left-column{
+    flex: 1;
+    border-radius: 0;
+    padding: 20px;
+    background-color: var(--mianBackgroundColor);
+    border: 1px solid #1d1c1c;
+    
+  }
+  /* Styles for the left column (feed) */
+  
   
   /* Media query for responsiveness */
   @media screen and (max-width: 768px) {

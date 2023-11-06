@@ -17,7 +17,7 @@
 </head>
 
 {% block content %}
-  <div class="container" style="background-color:#d8d2d2; padding:20px; border-radius:5px;">
+  <div class="container" style= "padding:20px; border-radius:5px;">
     <div class="row">
       <div class="col-sm-12">
         <div class="profile-image">
@@ -35,7 +35,7 @@
       <h6 class="text-muted">{{user.job_title}}</h6>
       <p>{{user.bio}}</p>
       {% if user.about_me %}
-      <div class="card mb-3" style="background-color: #d8d2d2;">
+      <div class="card mb-3" style="background-color: #000;">
         <div class="card-header">
           About Me 
         </div>
@@ -56,10 +56,10 @@
         <a class="btn btn-primary" href="{% url 'users:update' %}">Update Profile</a>
        <!-- Dropdown Menu Settings -->
        <div class="dropdown" style="display: inline;">
-        <button  type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:0; background-color: inherit; color:black;">
+        <button  type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:0; background-color: #fff; color:inherit;">
           <i class="fa-solid fa-gear fa-2xl"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-dark">
+        <ul class="dropdown-menu dropdown-menu-dark" >
           <li><a class="dropdown-item " href="{% url 'users:social_media_link_form'  %}">Add Social Media Link</a></li>
           <li><a class="dropdown-item" href="{% url 'account_email' %}">E-mail</a></li>
           <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change My password</a></li>
@@ -156,13 +156,13 @@
         {% endfor %}
     </main>
 </div>
-<div class="nav-content" id="comments">
-  <div class="list-group">
+<div class="nav-content" id="comments"> <br>
+  <div class="list-group" >
     <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
       user's Comments ({{user_comments.all.count}})
     </button>
     {% for comment in user_comments %}
-    <button type="button" class="list-group-item list-group-item-action">{{comment.user.username}} - {{comment.comment}}</button>
+    <button type="button" class="list-group-item list-group-item-action" style="background-color: #000; color:#fff">{{comment.user.username}} - {{comment.comment}}</button>
     {% endfor %}
   </div>
 </div>

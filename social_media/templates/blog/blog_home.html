@@ -21,8 +21,20 @@ home blog
 </head>
 
 {% block content %}
+<body>
+    
+
     <main class="container">
         <section class="left-column">
+            <div style="position: fixed;">
+                <ul>
+                    <li>One</li>
+                    <li>One</li>
+                    <li>One</li>
+                </ul>
+            </div>
+        </section>
+        <section class="med-column">
             <!-- Search by tags  -->
         <form action="{% url 'search' input='default_value' %}" method="get">
             <input type="search" name="input" id="input" class="search-input" placeholder="Search by tags or titles">
@@ -35,8 +47,8 @@ home blog
        <div class="blog-post" id="{{blog.id}}">
             <!-- DropDown Menu -->
             <div class="dropdown">
-                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:white;">
-                    <i class="fa-solid fa-ellipsis-vertical fa-lg" style="color:black;"></i>
+                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
+                    <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
                 </button>
                     <ul class="dropdown-menu">
                         <!-- Edit Form --> 
@@ -125,18 +137,14 @@ home blog
             </div>
         {% endfor %}
         </section>
-        
         <section class="right-column">
-            <div>
+            <div style="position: fixed;">
                 <h5>Recently Published</h5>
                 <ul>
                     {% for blog in recent_blogs %}
                     <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">{{blog}}</a></li>
                     {% endfor %}
             </ul>
-        </div>
-        
-            <div>
                 <h6>Trending Tags for the last 7 days</h6>
                 <ul>
                     {% for tag in trendy_tags %}
@@ -166,4 +174,5 @@ crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
 
 {% endblock %}
+</body>
 {% endblock %}

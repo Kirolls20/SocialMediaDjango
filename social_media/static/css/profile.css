@@ -1,5 +1,19 @@
+:root{
+    --mainFontColor:white;
+    --mianBackgroundColor:#000;
+    --secondaryBackgroundcolor:#1d1c1c;
+  }
+  
+  body{
+    background-color: var(--mianBackgroundColor);
+    color:var(--mainFontColor);
+  }
+
+  .container{
+    background-color: var(--mianBackgroundColor);
+  }
 .btns-container{
-    background-color:  lightgray;
+    background-color:  var(--secondaryBackgroundcolor);
     border-radius: 10px;
     padding:10px;
     margin:20px;
@@ -9,7 +23,7 @@
 }
 .nav-btn{
     background-color: #67b8ee;
-    color: #fff;
+    color: var(--mainFontColor);
     border: none;
     padding: 10px 10px;
     cursor: pointer;
@@ -28,14 +42,14 @@
 .content{
     flex:2;
     padding:20px;
-    background-color:#f4f4f4;
+    background-color:var(--mianBackgroundColor);
     border: 1px solid #979595c4;
 }
 
 /* styles.css */
 
 .blog-post {
-    background-color: #f9f9f9;
+    background-color: var(--mianBackgroundColor);
     padding: 20px;
     border: 1px solid #ddd;
     margin: 10px;
