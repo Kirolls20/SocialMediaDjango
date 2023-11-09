@@ -95,7 +95,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "social_media.users",
     "social_media.blog",
-
+    "social_media.questions",
+    
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

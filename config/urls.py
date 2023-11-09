@@ -19,6 +19,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     # Blog Urls
     path('blog/',include('social_media.blog.urls')),
+    path('question/',include('social_media.questions.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development

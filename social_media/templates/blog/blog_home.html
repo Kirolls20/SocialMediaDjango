@@ -50,7 +50,7 @@ home blog
                 <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
                     <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
                 </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" style="background-color:black">
                         <!-- Edit Form --> 
                             <li class="dropdown-item" ><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
                             <!-- Delete Form  -->
@@ -85,7 +85,7 @@ home blog
             {% endif %}
             <p class="date">Date: {{blog.pub_date}}</p>
             <div class="body">
-                {% with max_length=200 %}  <!--Set desired Charachter limits -->
+                {% with max_length=200 %} 
                     {% if blog.body|length > max_length %}
                         <div class="truncated-text">
                             {{blog.body|safe|slice:max_length}} ...
@@ -106,7 +106,7 @@ home blog
             </div>
             <div class="actions">
                 <div class="blog-details">
-                    <button  style="background-color: aliceblue; border:0;" id="like-button" data-blog-id="{{ blog.id }}" data-csrf-token="{% csrf_token %}">
+                    <button  style="background-color: inherit; border:0;" id="like-button" data-blog-id="{{ blog.id }}" data-csrf-token="{% csrf_token %}">
                        {% if request.user in blog.likes.all %}
                         <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
                         {% else %}
