@@ -17,10 +17,12 @@ class CreateBlogForm(forms.ModelForm):
     tags = TagField(
         required=True,
         label='',
+        help_text= 'add Comma after each tag',
         widget=forms.widgets.TextInput(
             attrs={
                 'placeholder':'Add some tags here',
                 'class':'custom-tag-input',
+               
             }))
             
     body= forms.CharField(

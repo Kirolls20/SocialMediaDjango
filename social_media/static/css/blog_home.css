@@ -203,15 +203,17 @@ button {
   .delete-container {
     display: none;
     background-color: #fff;
+    color:#000;
     padding: 20px;
     border: 1px solid #ddd;
-    position: absolute;
+    position: relative;
     z-index: 2;
     width: 80%;
     margin: 0 auto;
     top: 10%;
     left: 10%;
     text-align: center;
+    border-radius: 10px;
   }
   
   /* Media query for delete confirmation container */

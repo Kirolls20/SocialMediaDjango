@@ -120,7 +120,7 @@ class BlogDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
     #     return super().delete(request,*args,**kwargs)
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('blogs_home')
 
 
 class CreateCommentView(TemplateView):
@@ -133,7 +133,7 @@ class CreateCommentView(TemplateView):
             
             form = Comment(user= request.user,comment=comment_data,blog=blog)
             form.save()
-            return HttpResponseRedirect(reverse('home'))
+            return HttpResponseRedirect(reverse('blogs_home'))
  
 
 

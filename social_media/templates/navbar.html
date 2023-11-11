@@ -21,7 +21,7 @@
               <a class="nav-link" href="{% url 'blogs_home' %}">Blogs <span class="visually-hidden">(current)</span></a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="">Questions <span class="visually-hidden">(current)</span></a>
+              <a class="nav-link" href="{% url 'question_home' %}">Questions <span class="visually-hidden">(current)</span></a>
             </li>
             {% if request.user.is_authenticated %}
             <li class="nav-item">

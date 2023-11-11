@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Create Blog
+Edit Question
 {% endblock %}
 
 <head>
@@ -20,14 +20,14 @@ Create Blog
     {% endblock %}
 </head>
 {% block content %}
-<body style="background-color: #000; color:#fff;">
+<body style="background-color:#000; color:#fff;">
     <div class="blog-form-container">
-        <h1>Create New Blog</h1>
-        <form action="" method="post" enctype="multipart/form-data">
+        <h1>Ask Question</h1>
+        <form action="#" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{form.as_p}}
-            <input type="submit" value="Submit" class="submit-btn">
-            <a href="{% url 'blogs_home' %}" class="btn btn-white">Cancel</a>
+            <input type="submit" value="Update" class="submit-btn">
+            <a href="{% url 'question_home' %}" class="btn btn-white">Cancel</a>
         </form>
     </div>
 </body>
