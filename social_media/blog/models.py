@@ -24,6 +24,8 @@ class Blog(models.Model):
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
     comments = models.ManyToManyField(User,related_name='blog_comments',through='Comment')
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)
+    original_post = models.ForeignKey('self',blank=True,null=True,on_delete=models.CASCADE)
+    repost = models.PositiveIntegerField(default=0)
     pub_date = models.DateTimeField(auto_now_add = True)
     edit_date = models.DateTimeField(auto_now=True)
 
