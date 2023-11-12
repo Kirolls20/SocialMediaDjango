@@ -3,11 +3,13 @@ $(document).ready(function (){
         var questionId = $(this).data('question-id');
         var csrfToken = $(this).data('csrf-token');
         var likeButton = $(this);
-        var likeCount = $('#likes-count');
+        var likeCount = $('#likes-count-' + questionId);
+        let count = parseInt(localStorage.getItem('likeCount')) || 0;
+        
         $.ajax({
             url: `/question/like/${questionId}/`,
             method:'POST',
-            date:{csrfmiddlewaretoken:csrfToken},
+            data:{csrfmiddlewaretoken:csrfToken},
 
             success: function (data) {
                 if (data.liked) {
@@ -16,6 +18,9 @@ $(document).ready(function (){
                     likeButton.html('<i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>');
                 }
                 likeCount.text(data.likes_count + ' Likes');
+
+                // Save the updated like count in local storage
+                localStorage.setItem('likeCount', count);
             }
         });
 

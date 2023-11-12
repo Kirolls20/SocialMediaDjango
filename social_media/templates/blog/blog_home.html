@@ -136,7 +136,7 @@ home blog
                         <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
                         {% endif %}
                     </button>
-                    <span id="likes-count">{{ likes_count }}</span> 
+                    <span id="likes-count-{{ blog.id }}">{{ likes_count }}</span> 
                     <div class="comments" style="display: inline; margin-left:10px;"> 
                         {% if request.user in blog.comments.all %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">

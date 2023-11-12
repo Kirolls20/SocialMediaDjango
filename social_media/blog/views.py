@@ -148,7 +148,7 @@ class LikeView(LoginRequiredMixin,View):
         else:
             blog.likes.add(request.user)
             liked = True
-        return JsonResponse({'liked': liked, 'likes_count': blog.likes.count()})
+        return JsonResponse({'liked': liked, 'likes_count': blog.likes_count()})
 
 
 

@@ -93,7 +93,7 @@ Questions
             <div class="body">
                 <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
                     <h1 class="title">{{question.question}}</h1>
-                </a>
+                </a> <br>
             </div>
                 <form action="{% url 'answer_question' question.id %}" method="post">
                     {% csrf_token %}
@@ -111,10 +111,21 @@ Questions
                             <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
                             {% endif %}
                         </button>
-                        <span id="likes-count">{{ likes_count }}</span>
+                        <span id="likes-count-{{question.id}}">{{ likes_count }}</span>
+                        <div class="comments" style="display: inline-block; margin-left:10px;"> 
+                            <!-- Answers -->
+                            {% if request.user in blog.comments.all %}
+                            <a href="#" style="text-decoration: none;">
+                                <i class="fa-solid fa-comment fa-2xl"></i>{{question.answers.all.count}}
+                            </a>
+                            {% else %}
+                            <a href="#" style="text-decoration: none; ">
+                                <i class="fa-regular fa-comment fa-2xl"></i>{{question.answers.all.count}} answers
+                            </a>
+                            {% endif %}
+                            <!--  -->
+                        </div>
                     </div>
-                    <!-- Answers -->
-                    <!--  -->
                 </div>
             </div>
         {% endfor %}

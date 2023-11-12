@@ -4,7 +4,7 @@ $(document).ready(function () {
         var blogId = $(this).data('blog-id');
         var csrfToken = $(this).data('csrf-token');
         var likeButton = $(this);
-        var likesCount = $('#likes-count');
+        var likesCount = $('#likes-count-', blogId);
         $.ajax({
             url: `/blog/like/${blogId}/`,
             method: 'POST',
