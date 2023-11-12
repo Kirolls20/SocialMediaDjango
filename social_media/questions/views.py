@@ -1,10 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.urls import reverse
-from questions.models import Question,Answer
-from django.views.generic import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
+from django.views.generic import TemplateView,DetailView,View
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
+#Internal imports 
+from questions.models import Question,Answer
 from .forms import CreateNewQuestionForm
 
 
@@ -48,3 +55,46 @@ class DeleteQuestionView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
     def get_success_url(self):
         return reverse('question_home')
 
+class QuestionDetailView(LoginRequiredMixin,DetailView):
+    template_name = 'questions/question_details.html'
+    model = Question
+    context_object_name = 'question'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['question'] = Question.objects.get(id= self.kwargs['pk'])
+        context['answers'] = Answer.objects.filter(question=context['question'])
+
+        return context
+
+
+class AnswerQuestionView(LoginRequiredMixin,SuccessMessageMixin,TemplateView):
+    template_name = 'questions/question_home.html'
+
+    def post(self,request,**kwargs):
+        question = Question.objects.get(id=self.kwargs['pk'])
+        user = self.request.user
+        if request.method == 'POST':
+            answer = request.POST['answer']
+            obj = Answer(author=user,question=question,answer=answer)
+            obj.save()
+            messages.success(self.request,'Thanks for answering the question')
+            return redirect('question_home')
+
+
+# @method_decorator(login_required, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
+class LikeQuestionView(LoginRequiredMixin,View):
+    def post(self, request, **kwargs):
+        question = Question.objects.get(id=self.kwargs['pk'])
+        try:
+            print('Entring the post')
+            if question.likes.filter(id=request.user.id).exists():
+                question.likes.remove(request.user)
+                liked = False
+            else:
+                question.likes.add(request.user)
+                liked = True
+            return JsonResponse({'liked': liked, 'likes_count': question.likes.count()})
+        except Exception as e :
+            print(f'Error : {e}')

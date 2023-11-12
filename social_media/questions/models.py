@@ -19,6 +19,10 @@ class Question(models.Model):
 
     def count_answers(self):
         return self.answers.count()
+    
+    def count_likes(self):
+        return self.likes.count()
+
 
 
 class Answer(models.Model):
@@ -32,4 +36,8 @@ class Answer(models.Model):
 
     def  __str__(self):
         return self.answer
+    
+    def count_votes(self):
+        return self.votes.count()
+        
     

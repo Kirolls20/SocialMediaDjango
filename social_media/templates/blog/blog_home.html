@@ -120,9 +120,17 @@ home blog
                 {% endif %}
             </div>
             <div class="actions">
+                
+                <div class="comment-container">
+                    <form action="{% url 'create_comment' blog.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="comment" id="comment" placeholder="type your comment here..">
+                        <button class="comment-btn" type="submit">Comment</button>
+                    </form>
+                </div>
                 <div class="blog-details">
-                    <button  style="background-color: inherit; border:0;" id="like-button" data-blog-id="{{ blog.id }}" data-csrf-token="{% csrf_token %}">
-                       {% if request.user in blog.likes.all %}
+                    <button data-blog-id='{{ blog.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>                   
+                        {% if request.user in blog.likes.all %}
                         <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
                         {% else %}
                         <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
@@ -140,13 +148,6 @@ home blog
                         </a>
                         {% endif %}
                     </div>
-                </div>
-                <div class="comment-container">
-                    <form action="{% url 'create_comment' blog.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="text" name="comment" id="comment" placeholder="type your comment here..">
-                        <button class="comment-btn" type="submit">Comment</button>
-                    </form>
                 </div>
             </div>
             </div>

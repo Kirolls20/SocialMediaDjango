@@ -12,6 +12,7 @@ from .forms import UserUpdateForm,SocialMediaLinkFormSet
   
 # User = get_user_model()
 from blog.models import Blog,Comment
+from questions.models import Question,Answer
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     template_name = 'users/user_profile.html'
@@ -25,6 +26,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk'])
         context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
         context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])
+        # context['users_questions'] = Question
         if len(context['user_blogs']) == 0 :
             context['new_profile'] = 'New Profile\nYou did not published anything yet'
         return context

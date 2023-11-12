@@ -26,9 +26,10 @@
     color: var(--mainFontColor);
     border: none;
     padding: 10px 10px;
+    justify-items: stretch;
     cursor: pointer;
     border-radius: 5px;
-    width:25%;
+    display:inline-flex;
 
 }
 .nav-btn:hover{

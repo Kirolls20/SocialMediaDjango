@@ -91,11 +91,31 @@ Questions
             {% endif %}
             <p class="date">Date: {{question.pub_date}}</p>
             <div class="body">
-                <a href="#" style="text-decoration: none;">
+                <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
                     <h1 class="title">{{question.question}}</h1>
                 </a>
             </div>
-           
+                <form action="{% url 'answer_question' question.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="answer" id="comment" placeholder="type your answer here..">
+                    <button class="comment-btn" type="submit">Answer</button>
+
+                </form>
+                <div class="actions">
+                    <!-- Likes -->
+                    <div class="like-container">
+                        <button data-question-id='{{ question.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+                           {% if request.user in question.likes.all %}
+                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                            {% else %}
+                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                            {% endif %}
+                        </button>
+                        <span id="likes-count">{{ likes_count }}</span>
+                    </div>
+                    <!-- Answers -->
+                    <!--  -->
+                </div>
             </div>
         {% endfor %}
         </section>
@@ -123,12 +143,9 @@ Questions
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
         crossorigin="anonymous"></script>
         <!-- place project specific Javascript in this file -->
-        <script src="{% static 'js/read_more.js' %}"></script>
-        <script src="{% static 'js/like.js' %}"></script>
+        <script src="{% static 'js/like_question.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
-        
         <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
-        
     {% endblock %}
 </body>
 

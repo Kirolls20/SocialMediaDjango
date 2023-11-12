@@ -24,7 +24,7 @@ blog details
     {% block content %}
         <div class="blog-container">
             <div class="blog-post">
-                <a href="{% url 'home' %}" style="text-decoration:none;">
+                <a href="{% url 'blogs_home' %}" style="text-decoration:none;">
                     <i class="fa-solid fa-house fa-xl"></i>Back
                 </a>
                 <h1 class="title">{{blog.title}}</h1>
@@ -42,8 +42,7 @@ blog details
                 <p class="date">published in: {{blog.pub_date}}</p>
                 <!-- Like and comments  -->
                 <div class="blog-details">
-                    <button  style="background-color: aliceblue; border:0;" id="like-button" data-blog-id="{{ blog.id }}" data-csrf-token="{% csrf_token %}">
-                       {% if request.user in blog.likes.all %}
+                    <button data-blog-id='{{ blog.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>                       {% if request.user in blog.likes.all %}
                         <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i>
                         {% else %}
                         <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i>
