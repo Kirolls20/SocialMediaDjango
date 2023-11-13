@@ -9,7 +9,7 @@ class Question(models.Model):
     original_question = models.ForeignKey('self',blank=True,null = True,on_delete=models.CASCADE,related_name='reposts')
     likes= models.ManyToManyField(User,related_name='question_likes',blank=True)
     answers = models.ManyToManyField(User,related_name='question_answers',through='Answer')
-    repost = models.PositiveIntegerField(default=0)
+    repost_count = models.PositiveIntegerField(default=0)
     pub_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
 

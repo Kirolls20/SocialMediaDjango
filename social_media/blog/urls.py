@@ -14,5 +14,6 @@ urlpatterns = [
     path('search/<str:input>/all/', views.SearchView.as_view(), name='search'),
     path('tags/<str:tag>',views.TrendyTagView.as_view(),name='trendy_tags'),
     path('<int:pk>/bookmark/',views.AddBookmarkView.as_view(),name='bookmark'),
+    path('<int:pk>/repost/',views.RepostView.as_view(),name='repost_blog'),
     
 ]

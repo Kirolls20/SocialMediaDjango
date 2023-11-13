@@ -215,7 +215,13 @@ button {
     text-align: center;
     border-radius: 10px;
   }
-  
+  #repost-btn{
+    border:0;
+    background-color: inherit;
+  }
+  #repost-btn:hover{
+    color: #0056b3;
+  }
   /* Media query for delete confirmation container */
   @media screen and (max-width: 768px) {
     .delete-container {

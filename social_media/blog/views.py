@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms.models import BaseModelForm
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.urls import reverse
 from django.views.generic.base import RedirectView
@@ -150,8 +150,23 @@ class LikeView(LoginRequiredMixin,View):
             liked = True
         return JsonResponse({'liked': liked, 'likes_count': blog.likes_count()})
 
-
-
+@method_decorator(csrf_exempt,name='dispatch')
+class RepostView(LoginRequiredMixin,View):
+    def post(self,request,**kwargs):
+        blog= get_object_or_404(Blog,id=self.kwargs['pk'])
+        user = self.request.user
+        # Repost create post
+        new_repost = Blog(
+            author= user,
+            title = f'Reposted :{blog.title}',
+            body = blog.body,
+            original_post= blog,
+        )
+        new_repost.save()
+        blog.repost +=1
+        blog.save()
+        return JsonResponse({'repost_count':blog.repost})
+    
 class CommentListView(LoginRequiredMixin,TemplateView):
     template_name= 'blog/blog_comments.html'
     

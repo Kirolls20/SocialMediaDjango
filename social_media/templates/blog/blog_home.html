@@ -148,6 +148,12 @@ home blog
                         </a>
                         {% endif %}
                     </div>
+                    <div class="repost"  id="repost-container-{{blog.id}}" style="display:inline-block; margin:10px;">
+                        <button id="repost-btn" data-repost-id ="{{blog.id}}"  data-csrf-token='{% csrf_token %}'>
+                            <i class="fa-solid fa-repeat fa-flip-horizontal fa-2x"></i>
+                        </button>
+                        <span id="repost-count-{{blog.id}}">{{blog.repost}}</span>
+                    </div>
                 </div>
             </div>
             </div>
@@ -185,6 +191,7 @@ crossorigin="anonymous"></script>
 <!-- place project specific Javascript in this file -->
 <script src="{% static 'js/read_more.js' %}"></script>
 <script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/repost_blog.js' %}"></script>
 <script defer src="{% static 'js/project.js' %}"></script>
 
 <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
