@@ -9,6 +9,7 @@ $(document).ready(function (){
             method:'POST',
             data:{csrfmiddlewaretoken:csrfToken},
             success: function(data){
+                alert('Blog Reposted!')
                 repostCount.text(data.repost_count )
             }
         });

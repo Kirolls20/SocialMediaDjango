@@ -4,6 +4,26 @@
   --secondaryBackgroundcolor:#1d1c1c;
 }
 
+@keyframes hide {
+  0% {
+    opacity: 1;
+    padding: 10px;
+    margin-bottom: 20px;
+   
+    overflow: hidden;
+  }
+  50% {
+    opacity: 0;
+    max-height: 200px; /* Gradually decrease the maximum height */
+  }
+  100% {
+    opacity: 0;
+    padding: 0;
+    margin-bottom: 0;
+    max-height: 0;
+  }
+}
+
 #home-heading{
     font-size: 50px;
     font-weight: 700;
@@ -98,6 +118,10 @@ button {
     background-color: var(--mianBackgroundColor);
     border-radius: 10px;
     color:var(--mainFontColor);
+    animation-name: hide;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
   }
   .title,.author,date,
   .title {
@@ -164,7 +188,33 @@ button {
     border: 1px solid #1d1c1c;
     
   }
+  .actions{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+li a {
+  color:#000;
+}
+
   /* Styles for the left column (feed) */
+  #repost-btn{
+    border:0;
+    background-color: inherit;
+    margin-top:10px;
+  }
+  #repost-btn:hover{
+    color: #0056b3;
+  }
+  #like-button{
+    border:0;
+    background-color: inherit;
+
+  }
+  #like-button:hover{
+    color:#581530;
+  }
   
   
   /* Media query for responsiveness */
@@ -197,7 +247,9 @@ button {
   .dropdown:hover .dropdown-menu {
     display: block;
   }
-  
+  .dropdown:focus{
+    display: block;
+  }
   
   /* Styling for delete confirmation container */
   .delete-container {
@@ -215,13 +267,7 @@ button {
     text-align: center;
     border-radius: 10px;
   }
-  #repost-btn{
-    border:0;
-    background-color: inherit;
-  }
-  #repost-btn:hover{
-    color: #0056b3;
-  }
+
   /* Media query for delete confirmation container */
   @media screen and (max-width: 768px) {
     .delete-container {

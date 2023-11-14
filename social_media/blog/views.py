@@ -34,6 +34,7 @@ class BlogHomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['home_blogs'] = Blog.objects.all().order_by('?')
         context['recent_blogs'] = Blog.objects.all().order_by('-pub_date')[:4]
+        
         # Query to get the most repeated tags for last 7 days
         start_date = timezone.now() - timedelta(days=7)
         most_repeated_tags = Tag.objects.filter(blog__pub_date__gte=start_date).annotate(
@@ -68,7 +69,7 @@ class CreateBlogView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
         return super().form_valid(form)
     
     def get_success_url(self) -> str:
-        return reverse('home')
+        return reverse('blogs_home')
     
 class BlogDetailView(LoginRequiredMixin,HitCountDetailView):
     template_name = 'blog/blog_details.html'
@@ -162,10 +163,10 @@ class RepostView(LoginRequiredMixin,View):
             body = blog.body,
             original_post= blog,
         )
-        new_repost.save()
+        new_repost = new_repost.save()
         blog.repost +=1
         blog.save()
-        return JsonResponse({'repost_count':blog.repost})
+        return JsonResponse({'repost_count':blog.repost,'is_reposted':new_repost})
     
 class CommentListView(LoginRequiredMixin,TemplateView):
     template_name= 'blog/blog_comments.html'
@@ -202,7 +203,7 @@ class AddBookmarkView(LoginRequiredMixin,SuccessMessageMixin,View):
             bookmark, created = Bookmark.objects.get_or_create(user=user,blog=blog)
             if created:
                 messages.success(self.request,'Bookmark saved in your  save list ')
-                return HttpResponseRedirect(reverse('home'))
+                return HttpResponseRedirect(reverse('blogs_home'))
             else:
                 messages.warning(self.request,'You already bookedmark this blog.')
                 return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
