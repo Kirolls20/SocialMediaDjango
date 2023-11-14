@@ -9,6 +9,7 @@ urlpatterns = [
    path('<int:pk>/details/',views.QuestionDetailView.as_view(),name='question_detail'),
    path('answer/<int:pk>/question/',views.AnswerQuestionView.as_view(),name='answer_question'),
    path('like/<int:pk>/',views.LikeQuestionView.as_view(),name='like_question'),
+   path('<int:pk>/repost/',views.RepostQuestionView.as_view(),name='repost_question'),
    
 
 ]

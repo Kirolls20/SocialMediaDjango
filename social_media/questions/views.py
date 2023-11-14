@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -98,3 +98,20 @@ class LikeQuestionView(LoginRequiredMixin,View):
             return JsonResponse({'liked': liked, 'likes_count': question.likes.count()})
         except Exception as e :
             print(f'Error : {e}')
+
+@method_decorator(csrf_exempt,name='dispatch')
+class RepostQuestionView(LoginRequiredMixin,View):
+
+    def post(self,request,**kwargs):
+        question_id = get_object_or_404(Question,id=self.kwargs['pk'])
+        user = self.request.user
+        repost_new_question= Question(
+            author =user,
+            question = f"Reposted: {question_id.question}",
+            original_question= question_id
+        )
+        repost_new_question.save()
+        question_id.repost_count +=1
+        question_id.save()
+        return JsonResponse({'repost_count':question_id.repost_count})
+         

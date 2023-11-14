@@ -57,11 +57,15 @@ Questions
                 <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
                     <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
                 </button>
-                    <ul class="dropdown-menu" style="background-color:black; color:#fff;">
+                    <ul class="dropdown-menu" style="background-color:white ;">
+                        {% if request.user == question.author %}
                         <!-- Edit Form --> 
                             <li class="dropdown-item" ><a href="{% url 'update_question' question.id %}" style="text-decoration: none;">Edit</a></li>
                             <!-- Delete Form  -->
-                            <li class="dropdown-item" id="delete">Delete</li> 
+                            <li class="dropdown-item" style="color:#000; font-weight:bolder;">Delete</li> 
+                            {% endif %}
+                            <li class="dropdown-item" id="question-{{question.id}}" onclick="hideQuestion({{question.id}})">Hide</li>
+                            <li class="dropdown-item" ><a href="#" style="text-decoration: none;">Bookmark</a></li>
                     </ul>
                 </div>       
             <!-- Delete Blog pop up  Container -->
@@ -75,16 +79,16 @@ Questions
             </div>
             <!-- Endof the Delete pop up -->
             <h6 class="author">
-                {% if request.user.is_authenticated %}
-                    {% if request.user.profile_image %}
-                        <img class="profile-image" src="{{request.user.profile_image.url }}" alt="{{request.user}}">
+           
+                    {% if question.author.profile_image %}
+                        <img class="profile-image" src="{{question.author.profile_image.url }}" alt="{{request.user}}">
                     {% else %}
-                        <img src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+                        <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
                     {% endif %} 
                     <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
-                {% else %}
+               
                     {{question.author}}
-                {% endif %}
+        
                 </h6>
             {% if question.tags.all %}
             <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
@@ -123,7 +127,13 @@ Questions
                                 <i class="fa-regular fa-comment fa-2xl"></i>{{question.answers.all.count}} answers
                             </a>
                             {% endif %}
-                            <!--  -->
+                            <!--Repost Question  -->
+                            <div class="repost"  id="repost-container-{{question.id}}" style="display:inline-block; margin-top:10px;">
+                                <button id="repost-btn" data-repost-id ="{{question.id}}"  data-csrf-token='{% csrf_token %}'>
+                                    <i class="fa-solid fa-retweet fa-2x"></i>
+                                    </button>
+                                    <span id="repost-count-{{question.id}}">{{question.repost_count}}</span>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +165,9 @@ Questions
         crossorigin="anonymous"></script>
         <!-- place project specific Javascript in this file -->
         <script src="{% static 'js/like_question.js' %}"></script>
+        <script src="{% static 'js/repost_question.js' %}"></script>
         <script defer src="{% static 'js/project.js' %}"></script>
+        <script src="{% static 'js/hide_question.js' %}"></script>
         <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
     {% endblock %}
 </body>
