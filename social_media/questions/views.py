@@ -105,13 +105,18 @@ class RepostQuestionView(LoginRequiredMixin,View):
     def post(self,request,**kwargs):
         question_id = get_object_or_404(Question,id=self.kwargs['pk'])
         user = self.request.user
-        repost_new_question= Question(
-            author =user,
-            question = f"Reposted: {question_id.question}",
-            original_question= question_id
-        )
-        repost_new_question.save()
-        question_id.repost_count +=1
-        question_id.save()
-        return JsonResponse({'repost_count':question_id.repost_count})
+        try:
+            repost_new_question= Question(
+                author =user,
+                question = question_id.question ,
+                original_question= question_id,
+                reposed=True
+            )
+            repost_new_question.save()
+            question_id.repost_count +=1
+            question_id.save()
+        except Exception as e:
+            print('Error',e)
+            
+        return JsonResponse({'repost_count':question_id.repost_count,})
          

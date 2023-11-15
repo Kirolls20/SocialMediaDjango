@@ -10,6 +10,7 @@ class Question(models.Model):
     likes= models.ManyToManyField(User,related_name='question_likes',blank=True)
     answers = models.ManyToManyField(User,related_name='question_answers',through='Answer')
     repost_count = models.PositiveIntegerField(default=0)
+    reposted = models.BooleanField(default=False)
     pub_date = models.DateTimeField(auto_now_add=True)
     edit_date = models.DateTimeField(auto_now=True)
 

@@ -26,6 +26,7 @@ class Blog(models.Model):
     likes = models.ManyToManyField(User,related_name='blog_likes',blank=True)
     original_post = models.ForeignKey('self',blank=True,null=True,on_delete=models.CASCADE)
     repost = models.PositiveIntegerField(default=0)
+    reposted = models.BooleanField(default=False)
     pub_date = models.DateTimeField(auto_now_add = True)
     edit_date = models.DateTimeField(auto_now=True)
 

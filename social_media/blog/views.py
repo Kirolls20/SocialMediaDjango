@@ -159,14 +159,17 @@ class RepostView(LoginRequiredMixin,View):
         # Repost create post
         new_repost = Blog(
             author= user,
-            title = f'Reposted :{blog.title}',
+            title = blog.title,
             body = blog.body,
+            image= blog.image,
             original_post= blog,
+            tags = blog.tags,
+            reposted=True
         )
         new_repost = new_repost.save()
         blog.repost +=1
         blog.save()
-        return JsonResponse({'repost_count':blog.repost,'is_reposted':new_repost})
+        return JsonResponse({'repost_count':blog.repost})
     
 class CommentListView(LoginRequiredMixin,TemplateView):
     template_name= 'blog/blog_comments.html'

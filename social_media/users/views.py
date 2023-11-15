@@ -26,12 +26,11 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk']).order_by('-pub_date')
         context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
         context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])
-        # context['users_questions'] = Question
+        context['user_questions'] = Question.objects.filter(author=self.kwargs['pk']).order_by('-pub_date')
+        context['user_answers'] = Answer.objects.filter(author=self.kwargs['pk']).order_by('-pub_date')
         if len(context['user_blogs']) == 0 :
             context['new_profile'] = 'New Profile\nYou did not published anything yet'
         return context
-
-
 
 user_detail_view = UserDetailView.as_view()
 

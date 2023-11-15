@@ -59,9 +59,9 @@ home blog
                     <ul class="dropdown-menu" style="background-color:white ;">
                         {% if request.user == blog.author %}
                         <!-- Edit Form --> 
-                            <li class="dropdown-item" ><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
+                            <li class="dropdown-item"><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
                             <!-- Delete Form  -->
-                            <li class="dropdown-item" style="color:#000; font-weight:bolder;">Delete</li> 
+                            <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
                             {% endif %}
                             <li class="dropdown-item" id="blog-{{blog.id}}" onclick="hideBlog({{blog.id}})">Hide</li>
                         <li class="dropdown-item" ><a href="#" style="text-decoration: none;">Bookmark</a></li>
@@ -78,22 +78,30 @@ home blog
                 </form> 
             </div>
             <!-- Endof the Delete pop up -->
+            <h6 class="author">
+                {% if blog.author.profile_image %}
+                    <img class="profile-image" src="{{blog.author.profile_image.url }}" alt="{{request.user}}">
+                {% else %}
+                    <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+                {% endif %} 
+                <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
+            </h6>
+           
+             <!-- if the blog reposted  -->
+             {% if blog.reposted %}
+             <h6 class="text-muted">(reposted) from </h6>
+                {% if blog.original_post.author.profile_image %}
+                <img class="profile-image-reposted" src="{{blog.original_post.author.profile_image.url }}" alt="image">
+                {% else %}
+                <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+                {% endif %}
+                {{blog.original_post.author.username}}
+                
+            {% endif %} 
+            <!-- Blog title  -->
             <a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">
                 <h1 class="title">{{blog.title}}</h1>
             </a>
-            <h6 class="author">
-                
-                    {% if blog.author.profile_image %}
-                        <img class="profile-image" src="{{blog.author.profile_image.url }}" alt="{{request.user}}">
-                    {% else %}
-                        <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
-                    {% endif %} 
-                    <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
-               
-          
-                </h6>
-
-            
             {% if blog.tags.all %}
             <p class="author">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
@@ -165,13 +173,13 @@ home blog
                 <h5>Recently Published</h5>
                 <ul>
                     {% for blog in recent_blogs %}
-                    <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">{{blog}}</a></li>
+                    <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none; color:white;">{{blog}}</a></li>
                     {% endfor %}
             </ul>
                 <h6>Trending Tags for the last 7 days</h6>
                 <ul>
                     {% for tag in trendy_tags %}
-                    <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none;">{{tag}}</a></li>  
+                    <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none; color:white;">{{tag}}</a></li>  
                     {% endfor %}
                 </ul>
             </div>        

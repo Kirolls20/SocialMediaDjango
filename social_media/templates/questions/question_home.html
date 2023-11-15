@@ -25,11 +25,7 @@ Questions
     <main class="container">
         <section class="left-column">
             <div style="position: fixed;">
-                <ul>
-                    <li>One</li>
-                    <li>One</li>
-                    <li>One</li>
-                </ul>
+                
             </div>
         </section>
         <section class="med-column">
@@ -62,14 +58,14 @@ Questions
                         <!-- Edit Form --> 
                             <li class="dropdown-item" ><a href="{% url 'update_question' question.id %}" style="text-decoration: none;">Edit</a></li>
                             <!-- Delete Form  -->
-                            <li class="dropdown-item" style="color:#000; font-weight:bolder;">Delete</li> 
+                            <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
                             {% endif %}
                             <li class="dropdown-item" id="question-{{question.id}}" onclick="hideQuestion({{question.id}})">Hide</li>
                             <li class="dropdown-item" ><a href="#" style="text-decoration: none;">Bookmark</a></li>
                     </ul>
                 </div>       
             <!-- Delete Blog pop up  Container -->
-            <div class="delete-container">
+            <div class="delete-container" style="position: relative;">
                 <h3>Are You Sure you want to delete '{{question.question}}'</h3>
                 <form action="{% url 'delete_question' question.id %}" method="post">
                     {% csrf_token%}
@@ -79,7 +75,6 @@ Questions
             </div>
             <!-- Endof the Delete pop up -->
             <h6 class="author">
-           
                     {% if question.author.profile_image %}
                         <img class="profile-image" src="{{question.author.profile_image.url }}" alt="{{request.user}}">
                     {% else %}
@@ -88,8 +83,19 @@ Questions
                     <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
                
                     {{question.author}}
-        
                 </h6>
+                <!-- if the blog reposted  -->
+             {% if question.reposted %}
+             <h6 class="text-muted">(reposted) from </h6>
+                {% if question.original_question.author.profile_image %}
+                <img class="profile-image-reposted" src="{{question.original_question.author.profile_image.url }}" alt="image">
+                {% else %}
+                <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+                {% endif %}
+                {{question.original_question.author.username}}
+                
+            {% endif %} 
+
             {% if question.tags.all %}
             <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
@@ -97,7 +103,11 @@ Questions
             <div class="body">
                 <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
                     <h1 class="title">{{question.question}}</h1>
+                    
                 </a> <br>
+                {% if question.reposted %}
+                <h6 class="text-muted">(Reposted)</h6>
+                {% endif %} 
             </div>
                 <form action="{% url 'answer_question' question.id %}" method="post">
                     {% csrf_token %}

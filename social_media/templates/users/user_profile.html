@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}
   User:{{ object.username }}
 {% endblock title %}
@@ -56,7 +55,7 @@
         <a class="btn btn-primary" href="{% url 'users:update' %}">Update Profile</a>
        <!-- Dropdown Menu Settings -->
        <div class="dropdown" style="display: inline;">
-        <button  type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:0; background-color: #fff; color:inherit;">
+        <button  type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:0; background-color:inherit; color:#fff;">
           <i class="fa-solid fa-gear fa-2xl"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" >
@@ -68,19 +67,17 @@
         </ul>
       </div>
     </div>
-
       </div>
       <br>
-      
     </div>
     <!-- End Action buttons -->
   {% endif %}
 </div>
 <div class="btns-container">
   <button data-page="posts" class="nav-btn">Posts</button>
-  <button data-page="posts" class="nav-btn">Questions</button>
+  <button data-page="questions" class="nav-btn">Questions</button>
   <button data-page="comments" class="nav-btn">Comments</button>
-  <button data-page="posts" class="nav-btn">Answers</button>
+  <button data-page="answers" class="nav-btn">Answers</button>
   <button data-page="likes" class="nav-btn">Likes</button>
 
 <div class="nav-content" id="posts">
@@ -90,8 +87,8 @@
        <div class="blog-post" id="{{blog.id}}">
             <!-- DropDown Menu -->
             <div class="dropdown">
-                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:white;">
-                    <i class="fa-solid fa-ellipsis-vertical fa-lg" style="color:black;"></i>
+                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit; color:white;">
+                    <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
                 </button>
                     <ul class="dropdown-menu">
                         <!-- Edit Form --> 
@@ -126,11 +123,11 @@
             <div class="actions">
                 <div class="likes">
                     {% if request.user in blog.likes.all %}
-                        <button type="submit" style="background-color: white;">
+                        <button type="submit" style="background-color:inherit;">
                             <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
                         </button> {{blog.likes.all.count}}
                         {% else %}
-                        <button type="submit" style="background-color: white;">
+                        <button type="submit" style="background-color: inherit;">
                             <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
                         </button> {{blog.likes.all.count}}
                         {% endif %}                   
@@ -158,7 +155,72 @@
         {% endfor %}
     </main>
 </div>
-<div class="nav-content" id="comments"> <br>  
+<!-- Questions Section  -->
+<div class="nav-content" id="questions">
+  <main class="content">
+      <h3>User's Questions ({{user_questions.all.count}})</h3>
+        {% for question in user_questions %}
+       <div class="blog-post" id="{{question.id}}">
+            <!-- DropDown Menu -->
+            <div class="dropdown">
+                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit; color:white;">
+                    <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+                </button>
+                    <ul class="dropdown-menu">
+                        <!-- Edit Form --> 
+                            <li class="dropdown-item" ><a href="{% url 'update_question' question.id %}" style="text-decoration: none;">Edit</a></li>
+                            <!-- Delete Form  -->
+                            <li class="dropdown-item" id="delete">Delete</li> 
+                    </ul>
+                </div>       
+            <!-- Delete Blog pop up  Container -->
+            <div class="delete-container">
+                <h3>Are You Sure you want to delete '{{question.title}}' Question</h3>
+                <form action="{% url 'delete_question' question.id %}" method="post">
+                    {% csrf_token%}
+                    <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+                    <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+                    
+                </form> 
+            </div>
+            <!-- Endof the Delete pop up -->
+            <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
+                <h1 class="title">{{question.question}}</h1>
+            </a>
+            <p class="author">Author: {{question.author}}</p>
+            {% if question.tags.all %}
+            <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}
+            <p class="date">Date: {{question.pub_date}}</p>
+            <div class="actions">
+                <div class="likes">
+                    {% if request.user in question.likes.all %}
+                        <button type="submit" style="background-color: inherit;">
+                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{question.likes.all.count}}
+                        {% else %}
+                        <button type="submit" style="background-color: inherit;">
+                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                        </button> {{question.likes.all.count}}
+                        {% endif %}                   
+                </div>
+                <div class="comments">
+                   
+                </div>
+                <div class="comment-container">
+                  <form action="{% url 'answer_question' question.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="answer" id="comment" placeholder="type your answer here..">
+                    <button class="comment-btn" type="submit">Answer</button>
+                </form>
+                </div>     
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+</div>
+<!-- Comment Section -->
+<div class="nav-content" id="comments"> <br> 
   <div class="list-group" >
     <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
       user's Comments ({{user_comments.all.count}})
@@ -191,6 +253,17 @@
       {% endfor %}
   </main>
 </div>
+<!-- Answers Section  -->
+<div class="nav-content" id="answers"> <br> 
+  <div class="list-group" >
+    <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+      user's Answers ({{user_answers.all.count}})
+    </button>
+    {% for answer in user_answers %}
+    <button type="button" class="list-group-item list-group-item-action" style="background-color: #000; color:#fff">{{answer.user.username}} - {{answer.answer}}</button>
+    {% endfor %}
+  </div>
+</div>
 
 {% block javascript %}
 
@@ -201,8 +274,13 @@ crossorigin="anonymous"></script>
     
   <script defer src="{% static 'js/project.js' %}"></script>
   <script defer src="{% static 'js/profile_single_page.js' %}"></script>
-
+  <script src="{% static 'js/read_more.js' %}"></script>
+  <script src="{% static 'js/like.js' %}"></script>
+  <script src="{% static 'js/repost_blog.js' %}"></script>
+  <script src="{% static 'js/hide_blog.js' %}"></script>
+  <script src="{% static 'js/like_question.js' %}"></script>
+  <script src="{% static 'js/repost_question.js' %}"></script>
+  <script src="{% static 'js/hide_question.js' %}"></script>
   <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
-
 {% endblock %}
 {% endblock content %}

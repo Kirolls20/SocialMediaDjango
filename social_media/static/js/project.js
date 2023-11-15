@@ -6,8 +6,6 @@ deleteBtn.forEach(function(btn,index){
     btn.addEventListener('click',function(){
         const deleteContainer = document.querySelectorAll('.delete-container')[index];
         deleteContainer.style.display = 'block';
-        
-      
     })
     
 });
