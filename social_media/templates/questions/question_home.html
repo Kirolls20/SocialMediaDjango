@@ -61,7 +61,14 @@ Questions
                             <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
                             {% endif %}
                             <li class="dropdown-item" id="question-{{question.id}}" onclick="hideQuestion({{question.id}})">Hide</li>
-                            <li class="dropdown-item" ><a href="#" style="text-decoration: none;">Bookmark</a></li>
+                            <li class="dropdown-item" >
+                                <form action="{% url 'bookmark_question' question.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item" name="bookmark">
+                                        <i class="fa-regular fa-bookmark"></i>Bookmark
+                                    </button>
+                                </form>
+                            </li>
                     </ul>
                 </div>       
             <!-- Delete Blog pop up  Container -->

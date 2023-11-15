@@ -36,11 +36,21 @@ class Answer(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     pub_date = models.DateTimeField(auto_now = True)
 
-
     def  __str__(self):
         return self.answer
     
     def count_votes(self):
         return self.votes.count()
-        
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_question_saves')
+    question = models.ForeignKey(Question,on_delete=models.CASCADE)
+    # comments = models.ForeignKey(Comment, blank=True,null=True,on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
     
+
+    def __str__(self):
+        return f"Bookmarked {self.question}"
+
+    def count_bookmarks(self):
+        return self.objects.count()

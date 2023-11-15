@@ -10,7 +10,7 @@ $(document).ready(function (){
             data:{csrfmiddlewaretoken:csrfToken},
             success: function(data){
                 alert('Blog Reposted!')
-                repostCount.text(data.repost_count )
+                repostCount.text(data.repost_count + ' Reposts' )
             }
         });
     });

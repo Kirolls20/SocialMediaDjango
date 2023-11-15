@@ -1,10 +1,10 @@
 $(document).ready(function () {
      
-    $('.blog-details').on('click', '#like-button', function () {
+    $('.blog-details').off('click', '#like-button').on('click', '#like-button', function () {
         var blogId = $(this).data('blog-id');
         var csrfToken = $(this).data('csrf-token');
         var likeButton = $(this);
-        var likesCount = $('#likes-count-', blogId);
+        var likesCount = $('#likes-count-' +  blogId);
         $.ajax({
             url: `/blog/like/${blogId}/`,
             method: 'POST',

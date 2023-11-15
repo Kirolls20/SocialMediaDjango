@@ -10,6 +10,7 @@ urlpatterns = [
    path('answer/<int:pk>/question/',views.AnswerQuestionView.as_view(),name='answer_question'),
    path('like/<int:pk>/',views.LikeQuestionView.as_view(),name='like_question'),
    path('<int:pk>/repost/',views.RepostQuestionView.as_view(),name='repost_question'),
+   path('<int:pk>/bookmark/',views.BookmarkQuestionView.as_view(),name='bookmark_question'),
    
 
 ]

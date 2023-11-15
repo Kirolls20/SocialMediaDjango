@@ -2,6 +2,7 @@
   --mainFontColor:white;
   --mianBackgroundColor:#000;
   --secondaryBackgroundcolor:#1d1c1c;
+  --bs-gutter-x:1erm;
 }
 
 @keyframes hide {
@@ -75,10 +76,7 @@ button {
     outline: none;
 }
 
-#delete{
-  font-weight: bold;
-  color: white;
-}
+
 
 .blog-image{
     border-radius: 10px;
@@ -123,17 +121,42 @@ button {
     animation-fill-mode: forwards;
     animation-play-state: paused;
   }
-  .title,.author,date,
-  .title {
-    font-size: 24px;
-    font-weight: bold;
+  .author {
+    display: flex;  /* Use flexbox for better alignment */
+    align-items: center;
+    background-color: inherit;
     margin: 0;
-  }
-  .profile-image{
-    width:40px;
-    height:40px;
-    display:inline-block;
+    padding: 10px; /* Adjust padding as needed */
+    text-align: left; /* Align text to the left */
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover; /* Ensure the image maintains its aspect ratio */
+}
+
+.author h6 {
+    font-size: 14px;
+    margin: 0;
+    display:flex ;
+    color: gray;
+    
+}
+
+.author a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.text-muted {
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 0; /* Adjust the margin as needed */
+    margin-left: 5px; /* Add margin between the username and job title */
 }
 .profile-image-reposted{
   width:33px;
@@ -159,12 +182,25 @@ button {
     border-radius: 10px;
     padding: 2px;
     font-size: small;
+    text-align: start;
 
   }
-  
-  .body {
-    margin-top: 20px;
-    font-family: Arial, sans-serif;
+  .title h1{
+    font-size: 16px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+  }
+  .title h1:hover{
+    text-decoration: underline;
+    color:white;
+  }
+  .body , .full-text ,.truncated-text {
+    margin-top: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color:#fff;
+    -webkit-tap-highlight-color: transparent;
+    word-wrap: break-word;
+    font-weight: normal ;
   }
   
   /* Styles for the right column (sidebar) */
@@ -193,11 +229,26 @@ button {
     border: 1px solid #1d1c1c;
     
   }
-  .actions{
+  .actions-nums{
     display: flex;
-    justify-content:stretch;
-
+    margin-right: 10px;
+  }
+  .actions-nums h6:hover{
+    text-decoration: underline;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content:baseline; /* Spread items evenly in the container */
+    padding: 10px;
+    border-top: 1px solid #eee; /* Add a border to separate from the content above */
 }
+
+.blog-details {
+    display: flex;
+    align-items: center;
+}
+
 li a {
   color:#000;
 }
@@ -221,25 +272,6 @@ li a {
     color:#581530;
   }
   
-  
-  /* Media query for responsiveness */
-  @media screen and (max-width: 768px) {
-    .container {
-      flex-direction: column;
-    }
-  
-    .left-column {
-      flex: 1;
-      margin-right: 0;
-    }
-  
-    .right-column {
-      flex: 1;
-    }
-    #new-blog-btn{
-      margin-top: 10px;
-    }
-  }
   /* Styling for dropdown menus */
   .dropdown-menu {
     display: none;
@@ -252,10 +284,6 @@ li a {
   .dropdown:hover .dropdown-menu {
     display: block;
   }
-  .dropdown:focus{
-    display: block;
-  }
-  
   /* Styling for delete confirmation container */
   .delete-container {
     display: none;
@@ -272,15 +300,24 @@ li a {
     text-align: center;
     border-radius: 10px;
   }
-
-  /* Media query for delete confirmation container */
+  /* Media query for responsiveness */
   @media screen and (max-width: 768px) {
+    .container {
+      --bs-gutter-x: 0rem;
+      box-sizing: border-box;
+      flex-direction: column;
+    }
+    .blog-post{
+      max-width: 100%;
+    }
+    #new-blog-btn{
+      margin-top: 10px;
+    }
+  
     .delete-container {
       width: 90%;
       left: 5%;
     }
-  }
-  
   /* Show delete container when #delete is clicked */
   #delete:hover + .delete-container {
     display: block;
@@ -291,4 +328,4 @@ li a {
     max-width: 100%;
     height: auto;
   }
-  
+  }

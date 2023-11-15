@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseRedirect   
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 #Internal imports 
-from questions.models import Question,Answer
+from questions.models import Question,Answer,Bookmark
 from .forms import CreateNewQuestionForm
 
 
@@ -119,4 +119,20 @@ class RepostQuestionView(LoginRequiredMixin,View):
             print('Error',e)
             
         return JsonResponse({'repost_count':question_id.repost_count,})
+
+
+class BookmarkQuestionView(LoginRequiredMixin,View):
+
+    def post(self,reques,**kwargs):
+        user= self.request.user
+        question = Question.objects.get(id= self.kwargs['pk'])
+        if self.request.method == 'POST':
+            bookmark_data = self.request.POST['bookmark']
+            bookmark, created = Bookmark.objects.get_or_create(user=user,question=question)
+            if created:
+                messages.success(self.request,'Bookmark saved in your  save list ')
+                return HttpResponseRedirect(reverse('question_home'))
+            else:
+                messages.warning(self.request,'You already bookedmark this blog.')
+                return HttpResponseRedirect(reverse('question_detail',args=(question.id,)))
          

@@ -6,6 +6,7 @@ home blog
 {% endblock %}
 
 <head>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block css %}
     <link rel="stylesheet"
@@ -18,6 +19,8 @@ home blog
         <link href="{% static 'css/blog_home.css' %}" rel="stylesheet" />
     {% endblock %}
     <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+
+   
 </head>
 
 {% block content %}
@@ -59,12 +62,27 @@ home blog
                     <ul class="dropdown-menu" style="background-color:white ;">
                         {% if request.user == blog.author %}
                         <!-- Edit Form --> 
-                            <li class="dropdown-item"><a href="{% url 'update_blog' blog.id %}" style="text-decoration: none;">Edit</a></li>
+                            <li class="dropdown-item">
+                                <a class="dropdown-item" style="text-align: center;" href="{% url 'update_blog' blog.id %}" >
+                                    <i class="fa-solid fa-pencil"></i>Edit
+                                </a>
+                            </li>
                             <!-- Delete Form  -->
-                            <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
+                            <li class="dropdown-item" id="delete" style="text-align: center;">
+                                <i class="fa-solid fa-trash" ></i>Delete
+                            </li> 
                             {% endif %}
-                            <li class="dropdown-item" id="blog-{{blog.id}}" onclick="hideBlog({{blog.id}})">Hide</li>
-                        <li class="dropdown-item" ><a href="#" style="text-decoration: none;">Bookmark</a></li>
+                            <li class="dropdown-item" style="text-align: center;" id="blog-{{blog.id}}" onclick="hideBlog({{blog.id}})">
+                                <i class="fa-regular fa-eye-slash"></i>Hide
+                            </li>
+                        <li class="dropdown-item">
+                            <form action="{% url 'bookmark' blog.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item" name="bookmark">
+                                    <i class="fa-regular fa-bookmark"></i>Bookmark
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>       
             <!-- Delete Blog pop up  Container -->
@@ -78,15 +96,19 @@ home blog
                 </form> 
             </div>
             <!-- Endof the Delete pop up -->
-            <h6 class="author">
-                {% if blog.author.profile_image %}
+            <div class="author">
+                <h6>
+                    {% if blog.author.profile_image %}
                     <img class="profile-image" src="{{blog.author.profile_image.url }}" alt="{{request.user}}">
-                {% else %}
+                    {% else %}
                     <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
-                {% endif %} 
-                <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
-            </h6>
-           
+                    {% endif %} 
+                    <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}} </a>
+                    {% if blog.author.job_title %}
+                        <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} </h6>
+                        {% endif %}
+                </h6>
+            </div>
              <!-- if the blog reposted  -->
              {% if blog.reposted %}
              <h6 class="text-muted">(reposted) from </h6>
@@ -99,13 +121,12 @@ home blog
                 
             {% endif %} 
             <!-- Blog title  -->
-            <a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">
-                <h1 class="title">{{blog.title}}</h1>
+            <a href="{% url 'blog_details' blog.id %}" class="title">
+                <h1 >{{blog.title}}</h1>
             </a>
             {% if blog.tags.all %}
-            <p class="author">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            <p class="tags">Tags: {% for tag in blog.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
-            <p class="date">Date: {{blog.pub_date}}</p>
             <div class="body">
                 {% with max_length=200 %} 
                     {% if blog.body|length > max_length %}
@@ -134,7 +155,15 @@ home blog
                     <button class="comment-btn" type="submit">Comment</button>
                 </form>
             </div>
-            <hr style="height:20px;">
+            <div class="actions-nums">
+                <h6 class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</h6>
+                <h6 class="text-muted">
+                    <a href="{% url 'comment_list' blog.id %}" class="text-muted">
+                        {{blog.comments.all.count}} Comment
+                    </a>
+                </h6>
+                <h6 class="text-muted" id="repost-count-{{blog.id}}">{{blog.repost}} Reposts</h6>
+            </div>
             <div class="actions">            
                 <div class="blog-details">
                     <button data-blog-id='{{ blog.id }}' id='like-button' data-csrf-token='{% csrf_token %}'>                   
@@ -144,23 +173,27 @@ home blog
                         <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
                         {% endif %}
                     </button>
-                    <span id="likes-count-{{ blog.id }}">{{ likes_count }}</span> 
+                </div>
+
                     <div class="comments" style="display: inline; margin-left:10px;"> 
                         {% if request.user in blog.comments.all %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
-                            <i class="fa-solid fa-comment fa-2xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-solid fa-comment fa-2xl"></i>
                         </a>
                         {% else %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none; ">
-                            <i class="fa-regular fa-comment fa-2xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-regular fa-comment fa-2xl"></i>
                         </a>
                         {% endif %}
                     </div>
                     <div class="repost"  id="repost-container-{{blog.id}}" style="display:inline-block; margin-top:10px;">
                     <button id="repost-btn" data-repost-id ="{{blog.id}}"  data-csrf-token='{% csrf_token %}'>
-                        <i class="fa-solid fa-retweet fa-2x"></i>
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                          </svg>
                         </button>
-                        <span id="repost-count-{{blog.id}}">{{blog.repost}}</span>
                     </div>
                     <!-- Repost -->
                 </div>

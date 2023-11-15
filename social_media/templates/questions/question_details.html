@@ -58,6 +58,14 @@ Question Details
                         {% endif %}
                     </button>
                     <span id="likes-count">{{ count_likes }}</span> 
+                    
+                    <!-- Bookmark -->
+                    <form action="{% url 'bookmark_question' question.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item" style="display: inline-block;" name="bookmark">
+                            <i class="fa-regular fa-bookmark fa-xl"></i>
+                        </button>
+                    </form> 
                 </div>
                 <hr>
                 <div class="answers">

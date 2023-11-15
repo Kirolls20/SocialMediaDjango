@@ -202,7 +202,7 @@ class AddBookmarkView(LoginRequiredMixin,SuccessMessageMixin,View):
         user= self.request.user
         blog = Blog.objects.get(id= self.kwargs['pk'])
         if self.request.method == 'POST':
-            bookmark_date = request.POST['bookmark']
+            bookmark_data = request.POST['bookmark']
             bookmark, created = Bookmark.objects.get_or_create(user=user,blog=blog)
             if created:
                 messages.success(self.request,'Bookmark saved in your  save list ')
