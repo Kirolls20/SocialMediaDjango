@@ -24,31 +24,56 @@ blog details
     {% block content %}
         <div class="blog-container">
             <div class="blog-post">
-                <a href="{% url 'blogs_home' %}" style="text-decoration:none;">
-                    <i class="fa-solid fa-house fa-xl"></i>Back
-                </a>
+                <div>
+                    <a href="{% url 'blogs_home' %}" style="text-decoration:none;">
+                        <i class="fa-solid fa-house fa-xl"></i>Back
+                    </a>
+                    <form action="{% url 'bookmark' blog.id %}" method="post" style=" display: inline-block;">
+                        {% csrf_token %}
+                        <button type="submit" name="bookmark" style="background-color:inherit;">
+                            <i class="fa-regular fa-bookmark fa-xl" style="margin-left:10px;"></i>
+                        </button>
+                    </form>
+                </div>
                 <h1 class="title">{{blog.title}}</h1>
-                <!-- User image -->
-                {% if request.user.profile_image %}
-                    <img  class="profile-image" src="{{request.user.profile_image.url }}" alt="" > 
-                {% else %}
-                    <img class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="" >
-                {% endif %}
-                <p class="author"><a href="{% url 'users:detail' request.user.username request.user.id%}">Author: {{blog.author}}</a></p>
-                <p class="date"> Views: {{ hitcount.total_hits }}</p>
+                <div class="author">
+                    <h6>
+                        {% if blog.author.profile_image %}
+                        <img class="profile-image" src="{{blog.author.profile_image.url }}" alt="{{request.user}}">
+                        {% else %}
+                        <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+                        {% endif %} 
+                        <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}} </a>
+                        {% if blog.author.job_title %}
+                            <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} </h6>
+                            {% endif %}
+                            <p class="date"> Views: {{ hitcount.total_hits }}</p>
                 {% if blog.tags.all %}
                 <p class="tags">Tags: {% for tag in blog.tags.all%} <span class="tag">{{tag}}</span> {% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                            
+                </h6>
+                </div>
+                 <!-- if the blog reposted  -->
+                 {% if blog.reposted %}
+                 <h6 class="text-muted">(reposted) from </h6>
+                    {% if blog.original_post.author.profile_image %}
+                    <img class="profile-image-reposted" src="{{blog.original_post.author.profile_image.url }}" alt="image">
+                    {% else %}
+                    <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+                    {% endif %}
+                    {{blog.original_post.author.username}}
+                    <p class="author"><a href="{% url 'users:detail' request.user.username request.user.id%}">Author: {{blog.author}}</a></p>
+                {% endif %} 
                 {% endif %}
-                <p class="date">published in: {{blog.pub_date}}</p>
                 <!-- Like and comments  -->
                 <div class="blog-details">
-                    <button data-blog-id='{{ blog.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>                       {% if request.user in blog.likes.all %}
-                        <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i>
+                    <button data-blog-id='{{ blog.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>                       
+                        {% if request.user in blog.likes.all %}
+                        <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i> <span class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</span>
                         {% else %}
-                        <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i>
+                        <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i> <span class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</span>
                         {% endif %}
                     </button>
-                    <span id="likes-count">{{ likes_count }}</span> 
                     <div class="comments" style="display: inline; margin-left:10px;"> 
                         {% if request.user in blog.comments.all %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
@@ -60,12 +85,6 @@ blog details
                         </a>
                         {% endif %}
                     </div>
-                    <form action="{% url 'bookmark' blog.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" name="bookmark">
-                            <i class="fa-regular fa-bookmark fa-xl" style="margin-left:10px;"></i>
-                        </button>
-                    </form>
                 </div>
                 <hr>
                 <div class="body">

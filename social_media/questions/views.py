@@ -101,6 +101,22 @@ class LikeQuestionView(LoginRequiredMixin,View):
             print(f'Error : {e}')
 
 @method_decorator(csrf_exempt,name='dispatch')
+class LikeAnswerView(LoginRequiredMixin,View):
+    def post(self,request,**kwargs):
+        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        user = self.request.user
+        try:
+            if answer.votes.filter(id=request.user.id).exists():
+                answer.votes.remove(user)
+                voted = False
+            else:
+                answer.votes.add(user)
+                voted = True
+            return JsonResponse({'voted':voted,'votes_cout':answer.votes.count()})
+        except Exception as e:
+            print(f"Error: {e}")
+
+@method_decorator(csrf_exempt,name='dispatch')
 class RepostQuestionView(LoginRequiredMixin,View):
 
     def post(self,request,**kwargs):
