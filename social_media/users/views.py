@@ -9,7 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView,DetailView, RedirectView, UpdateView,TemplateView
 from .models import User,UserSocialMeiaLink
 from .forms import UserUpdateForm,SocialMediaLinkFormSet 
-  
+from blog.models import Bookmark as blog_bookmarks
+from questions.models import Bookmark as question_bookmarks
 # User = get_user_model()
 from blog.models import Blog,Comment
 from questions.models import Question,Answer
@@ -113,5 +114,22 @@ class UserSearchView(LoginRequiredMixin,TemplateView):
             else:
                 return reverse('search_users',args=['', 'all'])
 
-            
 
+class BookmarkBlogListView(LoginRequiredMixin,TemplateView):
+    template_name = 'users/bookmarks_blogs_list.html' 
+
+    def get_context_data(self,**kwargs):
+        context= super().get_context_data(**kwargs)
+        context['bookmarks_blog_list'] = blog_bookmarks.objects.filter(user = self.request.user). \
+        all().order_by('-created_date')
+        return context      
+
+
+class BookmarkQuestionListView(LoginRequiredMixin,TemplateView):
+    template_name= 'users/bookmarks_questions_list.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bookmarks_question_list'] = question_bookmarks.objects.filter(user=self.request.user). \
+        all().order_by('-pub_date')
+        return context

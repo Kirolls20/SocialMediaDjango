@@ -9,10 +9,10 @@ $(document).ready(function (){
             data:{csrfmiddlewaretoken:csrfToken},
             success:function(data){
                 alert('Question Repoted!')
-                repostCount.text(data.repost_count)
+                repostCount.text(data.repost_count + ' Reposts')
             }
-        })
-    })
+        });
+    });
 
 
 });

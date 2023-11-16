@@ -21,6 +21,7 @@ class QuestionsHomeView(LoginRequiredMixin,TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['questions'] = Question.objects.all().order_by('?')
+        context['recent_question'] = Question.objects.order_by('-pub_date')[:5]
         return context
 
 class CreateQuestionView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
@@ -118,7 +119,7 @@ class RepostQuestionView(LoginRequiredMixin,View):
         except Exception as e:
             print('Error',e)
             
-        return JsonResponse({'repost_count':question_id.repost_count,})
+        return JsonResponse({'repost_count':question_id.repost_count})
 
 
 class BookmarkQuestionView(LoginRequiredMixin,View):

@@ -1,5 +1,5 @@
 $(document).ready(function (){
-    $('.like-container').on('click','#like-button', function (){
+    $('.like-container').off('click','#like-button').on('click','#like-button', function (){
         var questionId = $(this).data('question-id');
         var csrfToken = $(this).data('csrf-token');
         var likeButton = $(this);

@@ -65,6 +65,10 @@
           <li><a class="dropdown-item " href="{% url 'users:social_media_link_form'  %}">Add Social Media Link</a></li>
           <li><a class="dropdown-item" href="{% url 'account_email' %}">E-mail</a></li>
           <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change My password</a></li>
+          <li><a class="dropdown-item" href="{% url 'users:blog_bookmarks' %}">
+            <i class="fa-regular fa-bookmark"></i>Bookmark
+          </a></li>
+          <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change My password</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
         </ul>
@@ -112,7 +116,7 @@
                         <form action="{% url 'bookmark' blog.id %}" method="post">
                             {% csrf_token %}
                             <button type="submit" class="dropdown-item" name="bookmark">
-                                <i class="fa-regular fa-bookmark"></i>Bookmark
+                                <i class="fa-regular fa-bookmark"></i> Blogs Bookmarks
                             </button>
                         </form>
                     </li>

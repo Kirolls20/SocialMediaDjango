@@ -108,13 +108,11 @@ Questions
             {% endif %}
             <p class="date">Date: {{question.pub_date}}</p>
             <div class="body">
-                <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
-                    <h1 class="title">{{question.question}}</h1>
+                <a href="{% url 'question_detail' question.id %}" class="title">
+                    <h1>{{question.question}}</h1>
                     
                 </a> <br>
-                {% if question.reposted %}
-                <h6 class="text-muted">(Reposted)</h6>
-                {% endif %} 
+                 
             </div>
                 <form action="{% url 'answer_question' question.id %}" method="post">
                     {% csrf_token %}
@@ -122,6 +120,19 @@ Questions
                     <button class="comment-btn" type="submit">Answer</button>
 
                 </form>
+                <div class="actions-nums">
+                    <h6 class="text-muted" id="likes-count-{{ question.id }}">
+                        {{question.likes.all.count}} Likes
+                    </h6>
+                    <h6 class="text-muted">
+                        <a href="" class="text-muted">
+                            {{question.answers.all.count}} Answers
+                        </a>
+                    </h6>
+                    <h6 class="text-muted" id="repost-count-{{question.id}}">
+                        {{question.repost_count}} Reposts
+                    </h6>
+                </div>
                 <div class="actions">
                     <!-- Likes -->
                     <div class="like-container">
@@ -137,19 +148,21 @@ Questions
                             <!-- Answers -->
                             {% if request.user in blog.comments.all %}
                             <a href="#" style="text-decoration: none;">
-                                <i class="fa-solid fa-comment fa-2xl"></i>{{question.answers.all.count}}
+                                <i class="fa-solid fa-comment fa-2xl"></i>
                             </a>
                             {% else %}
                             <a href="#" style="text-decoration: none; ">
-                                <i class="fa-regular fa-comment fa-2xl"></i>{{question.answers.all.count}} answers
+                                <i class="fa-regular fa-comment fa-2xl"></i>
                             </a>
                             {% endif %}
                             <!--Repost Question  -->
                             <div class="repost"  id="repost-container-{{question.id}}" style="display:inline-block; margin-top:10px;">
                                 <button id="repost-btn" data-repost-id ="{{question.id}}"  data-csrf-token='{% csrf_token %}'>
-                                    <i class="fa-solid fa-retweet fa-2x"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                      </svg>
                                     </button>
-                                    <span id="repost-count-{{question.id}}">{{question.repost_count}}</span>
                                 </div>
                         </div>
                     </div>
@@ -161,16 +174,11 @@ Questions
             <div style="position: fixed;">
                 <h5>Recently Published</h5>
                 <ul>
-                    {% for blog in recent_blogs %}
-                    <li><a href="{% url 'blog_details' blog.id %}" style="text-decoration: none;">{{blog}}</a></li>
+                    {% for question in recent_question %}
+                    <li><a href="{% url 'question_detail' question.id %}" class="title" style="color:white; text-decoration:underline;">{{question}}</a></li>
                     {% endfor %}
             </ul>
-                <h6>Trending Tags for the last 7 days</h6>
-                <ul>
-                    {% for tag in trendy_tags %}
-                    <li><a href="{% url 'trendy_tags' tag %}" style="text-decoration: none;">{{tag}}</a></li>  
-                    {% endfor %}
-                </ul>
+                
             </div>        
         </section>
     </main>
