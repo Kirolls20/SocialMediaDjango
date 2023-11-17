@@ -28,6 +28,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['user']= User.objects.get(id=self.kwargs['pk'])
+        context['social_media_links'] = UserSocialMeiaLink.objects.filter(user=self.kwargs['pk']).all()
         context['user_blogs'] = Blog.objects.filter(author=self.kwargs['pk']).order_by('-pub_date')
         context['user_comments'] = Comment.objects.filter(user=self.kwargs['pk'])
         context['user_likes'] = Blog.objects.filter(likes=self.kwargs['pk'])

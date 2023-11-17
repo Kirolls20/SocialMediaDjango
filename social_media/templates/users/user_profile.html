@@ -34,6 +34,26 @@
       {% endif %}
       <h6 class="text-muted">{{user.job_title}}</h6>
       <p>{{user.bio}}</p>
+      {% if social_media_links %}
+      <span class="text-muted"> Social Media Links</span>
+        {% for link in social_media_links %}
+          {% if link.platform == 'X' %}
+            <a href="{{link.link}}">
+              <i class="fa-brands fa-x-twitter"></i>
+            </a> 
+          {% endif %}
+          {% if link.platform == 'facebook' %}
+            <a href="{{link.link}}">
+              <i class="fa-brands fa-facebook"></i>
+            </a>
+          {% endif %}
+          {% if link.platform == 'instagram' %}
+            <a href="{{link.link}}">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+          {% endif %}
+        {% endfor %}           
+      {% endif %}
       {% if user.about_me %}
       <div class="card mb-3" style="background-color: #000;">
         <div class="card-header">
@@ -147,9 +167,7 @@
                   {% if blog.author.job_title %} 
                       <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} (reposted) </h6>
                       {% endif %}
-              </h6>
-              
-              
+              </h6> 
         </div>
         {% if blog.reposted %}
             <h6 class="text-muted"> from 
@@ -188,6 +206,14 @@
              </div>
              {% endif %}
          </div>
+         <!-- comment section -->
+         <div class="comment-container">
+          <form action="{% url 'create_comment' blog.id %}" method="post">
+              {% csrf_token %}
+              <input type="text" name="comment" id="comment" placeholder="type your comment here..">
+              <button class="comment-btn" type="submit">Comment</button>
+          </form>
+      </div>
                 <!-- Add more content here -->
             <div class="actions-nums">
               <h6 class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</h6>
@@ -208,7 +234,6 @@
                       {% endif %}
                   </button>
               </div>
-
                   <div class="comments" style="display: inline; margin-left:10px;"> 
                       {% if request.user in blog.comments.all %}
                       <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
@@ -220,85 +245,118 @@
                       </a>
                       {% endif %}
                   </div>
-                  <div class="repost"  id="repost-container-{{blog.id}}" style="display:inline-block; margin-top:10px;">
-                  <button id="repost-btn" data-repost-id ="{{blog.id}}"  data-csrf-token='{% csrf_token %}'>
-                      
-                      <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                          <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                          <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                        </svg>
-                      </button>
-                  </div>
-                  <!-- Repost -->
               </div>
           </div>
-       
         {% endfor %}
   </main>
 </div>
 <!-- Questions Section  -->
 <div class="nav-content" id="questions">
-  <main class="content">
-      <h3>User's Questions ({{user_questions.all.count}})</h3>
-        {% for question in user_questions %}
-       <div class="blog-post" id="{{question.id}}">
-            <!-- DropDown Menu -->
-            <div class="dropdown">
-                <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit; color:white;">
-                    <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+
+<section class="med-column">
+{% for question in user_questions %}
+<div class="blog-post" id="{{question.id}}">
+    <!-- DropDown Menu -->
+    <div class="dropdown">
+        <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
+            <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+        </button>
+            <ul class="dropdown-menu" style="background-color:white ;">
+                {% if request.user == question.author %}
+                <!-- Edit Form --> 
+                    <li class="dropdown-item" ><a href="{% url 'update_question' question.id %}" style="text-decoration: none;">Edit</a></li>
+                    <!-- Delete Form  -->
+                    <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
+                    {% endif %}
+                    <li class="dropdown-item" id="question-{{question.id}}" onclick="hideQuestion({{question.id}})">Hide</li>
+                    <li class="dropdown-item" >
+                        <form action="{% url 'bookmark_question' question.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item" name="bookmark">
+                                <i class="fa-regular fa-bookmark"></i>Bookmark
+                            </button>
+                        </form>
+                    </li>
+            </ul>
+        </div>       
+    <!-- Delete Blog pop up  Container -->
+    <div class="delete-container" style="position: relative;">
+        <h3>Are You Sure you want to delete '{{question.question}}'</h3>
+        <form action="{% url 'delete_question' question.id %}" method="post">
+            {% csrf_token%}
+            <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+            <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+        </form> 
+    </div>
+    <!-- Endof the Delete pop up -->
+    <h6 class="author">
+            {% if question.author.profile_image %}
+                <img class="profile-image" src="{{question.author.profile_image.url }}" alt="{{request.user}}">
+            {% else %}
+                <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+            {% endif %} 
+            <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
+       
+            {{question.author}}
+        </h6>
+    {% if question.tags.all %}
+    <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+    <p class="date">Date: {{question.pub_date}}</p>
+    <div class="body">
+        <a href="{% url 'question_detail' question.id %}" class="title">
+            <h1>{{question.question}}</h1>
+            
+        </a> <br>
+         
+    </div>
+        <form action="{% url 'answer_question' question.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="answer" id="comment" placeholder="type your answer here..">
+            <button class="comment-btn" type="submit">Answer</button>
+
+        </form>
+        <div class="actions-nums">
+            <h6 class="text-muted" id="likes-count-{{ question.id }}">
+                {{question.likes.all.count}} Likes
+            </h6>
+            <h6 class="text-muted">
+                <a href="" class="text-muted">
+                    {{question.answers.all.count}} Answers
+                </a>
+            </h6>
+            <h6 class="text-muted" id="repost-count-{{question.id}}">
+                {{question.repost_count}} Reposts
+            </h6>
+        </div>
+        <div class="actions">
+            <!-- Likes -->
+            <div class="like-container">
+                <button data-question-id='{{ question.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+                   {% if request.user in question.likes.all %}
+                    <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% else %}
+                    <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% endif %}
                 </button>
-                    <ul class="dropdown-menu">
-                        <!-- Edit Form --> 
-                            <li class="dropdown-item" ><a href="{% url 'update_question' question.id %}" style="text-decoration: none;">Edit</a></li>
-                            <!-- Delete Form  -->
-                            <li class="dropdown-item" id="delete">Delete</li> 
-                    </ul>
-                </div>       
-            <!-- Delete Blog pop up  Container -->
-            <div class="delete-container">
-                <h3>Are You Sure you want to delete '{{question.title}}' Question</h3>
-                <form action="{% url 'delete_question' question.id %}" method="post">
-                    {% csrf_token%}
-                    <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
-                    <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
-                    
-                </form> 
-            </div>
-            <!-- Endof the Delete pop up -->
-            <a href="{% url 'question_detail' question.id %}" style="text-decoration: none;">
-                <h1 class="title">{{question.question}}</h1>
-            </a>
-            <p class="author">Author: {{question.author}}</p>
-            {% if question.tags.all %}
-            <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-            {% endif %}
-            <p class="date">Date: {{question.pub_date}}</p>
-            <div class="actions">
-                <div class="likes">
-                    {% if request.user in question.likes.all %}
-                        <button type="submit" style="background-color: inherit;">
-                            <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
-                        </button> {{question.likes.all.count}}
-                        {% else %}
-                        <button type="submit" style="background-color: inherit;">
-                            <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
-                        </button> {{question.likes.all.count}}
-                        {% endif %}                   
+                <span id="likes-count-{{question.id}}">{{ likes_count }}</span>
+                <div class="comments" style="display: inline-block; margin-left:10px;"> 
+                    <!-- Answers -->
+                    {% if request.user in question.answers.all %}
+                    <a href="#" style="text-decoration: none;">
+                        <i class="fa-solid fa-comment fa-2xl"></i>
+                    </a>
+                    {% else %}
+                    <a href="#" style="text-decoration: none; ">
+                        <i class="fa-regular fa-comment fa-2xl"></i>
+                    </a>
+                    {% endif %}
                 </div>
-                <div class="comments">
-                   
-                </div>
-                <div class="comment-container">
-                  <form action="{% url 'answer_question' question.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="text" name="answer" id="comment" placeholder="type your answer here..">
-                    <button class="comment-btn" type="submit">Answer</button>
-                </form>
-                </div>     
             </div>
         </div>
-        {% endfor %}
-    </main>
+    </div>
+{% endfor %}
+</section>
 </div>
 <!-- Comment Section -->
 <div class="nav-content" id="comments"> <br> 
@@ -307,27 +365,56 @@
       user's Comments ({{user_comments.all.count}})
     </button>
     {% for comment in user_comments %}
-    <button type="button" class="list-group-item list-group-item-action" style="background-color: #000; color:#fff">{{comment.user.username}} - {{comment.comment}}</button>
+    <li class="list-group-item" >
+      {% if comment.user.profile_image %}
+          <img class="profile-image-thumb" src="{{comment.user.profile_image.url }}" alt="{{request.user}}">
+          {% else %}
+          <img  class="profile-image-thumb" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+      {% endif %}
+      <span class="text-muted">
+        {{comment.user.username}} 
+      </span> - 
+      {{comment.comment}}
+      <span>
+        <a href="{% url 'blog_details' comment.id %}" class="text-muted">see the post</a>
+      </span>
+    </li>
     {% endfor %}
   </div>
 </div>
+<!-- Likes Section -->
 <div class="nav-content" id="likes" >
-  <main class="content">
+  <main class="med-column">
       <h3>Blogs You Liked ({{user_likes.all.count}})</h3>
       {% for like in user_likes %}
      <div class="blog-post" id="{{like.id}}">
           
-          <a href="{% url 'blog_details' like.id %}" style="text-decoration: none;">
-              <h1 class="title">{{like.title}}</h1>
+          <a href="{% url 'blog_details' like.id %}"  class="title">
+              <h1>{{like.title}}</h1>
           </a>
+          {% if like.author.profile_image %}
+            <img class="profile-image-thumb" src="{{like.author.profile_image.url }}" alt="{{request.user}}">
+          {% else %}
+            <img  class="profile-image-thumb" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+          {% endif %}
           <p class="author">Author: {{like.author}}</p>
           {% if like.tags.all %}
           <p class="author">Tags: {% for tag in like.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
           {% endif %}
-          <p class="date">Date: {{like.pub_date}}</p>
+          <p class="date">Date: {{like.pub_date|timesince}}</p>
           <div class="body">
               <p>{{like.body}}</p>       
               <!-- Add more content here -->
+              <div class="blog-details">
+                <button data-blog-id='{{ like.id }}' id='like-button' data-csrf-token='{% csrf_token %}'>                   
+                    {% if request.user in like.likes.all %}
+                    <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% else %}
+                    <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% endif %}
+                </button>
+                <h6 class="text-muted" id="likes-count-{{ like.id }}">{{like.likes.all.count}} Likes</h6>
+            </div>
           </div>        
               
       </div>
@@ -336,14 +423,41 @@
 </div>
 <!-- Answers Section  -->
 <div class="nav-content" id="answers"> <br> 
+  <section class="med-column">
+
+  
   <div class="list-group" >
     <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
       user's Answers ({{user_answers.all.count}})
     </button>
     {% for answer in user_answers %}
-    <button type="button" class="list-group-item list-group-item-action" style="background-color: #000; color:#fff">{{answer.user.username}} - {{answer.answer}}</button>
+    <li class="list-group-item">
+      {% if answer.author.profile_image %}
+          <img class="profile-image-thumb" src="{{answer.author.profile_image.url }}" alt="{{request.user}}">
+          {% else %}
+          <img  class="profile-image-thumb" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+      {% endif %}
+      <span class="text-muted">{{answer.author}}</span>
+      {{answer}}
+      <div class="vote">
+          <button data-answer-id='{{ answer.id }}' id='vote-btn' data-csrf-token='{% csrf_token %}' style="float:right; background-color: inherit; color:#000;">
+              {% if request.user in answer.votes.all %}
+                  <i class="fa-solid fa-thumbs-up"></i>
+              {% else %}
+              <i class="fa-regular fa-thumbs-up"></i>
+              {% endif %}
+          </button>
+          <span class="text-muted" id="votes-count-{{answer.id}}">{{answer.votes.all.count}} Votes</span>
+          <span>
+            <a href=" {% url 'question_detail' answer.id %}"  class="text-muted">
+              See The Question
+            </a>
+          </span>
+      </div>
+    </li>
     {% endfor %}
   </div>
+</section>
 </div>
 
 {% block javascript %}
@@ -353,7 +467,9 @@ integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cD
 crossorigin="anonymous"></script>
 <!-- place project specific Javascript in this file -->
     
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script defer src="{% static 'js/project.js' %}"></script>
+  <script src="{% static 'js/vote.js' %}"></script>
   <script defer src="{% static 'js/profile_single_page.js' %}"></script>
   <script src="{% static 'js/read_more.js' %}"></script>
   <script src="{% static 'js/like.js' %}"></script>

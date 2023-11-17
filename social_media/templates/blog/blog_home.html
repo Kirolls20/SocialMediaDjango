@@ -101,7 +101,7 @@ home blog
                     {% else %}
                     <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
                     {% endif %} 
-                    <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}} </a>
+                    <a href="{% url 'users:detail' blog.author blog.author.id %}" style="font-weight: 500;">{{blog.author}} </a>
                     {% if blog.author.job_title %}
                         <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date|timesince}} ago</h6>
                         {% endif %}

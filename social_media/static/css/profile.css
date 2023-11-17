@@ -41,6 +41,12 @@
 .nav-content{
     display:none;
 }
+.profile-image-thumb{
+  width:30px;;
+  height:30px;
+  display:block;
+  border-radius: 50%; 
+}
 
 @media screen and (max-width: 768px) {
     /* Styles for smaller screens */
@@ -49,7 +55,13 @@
     }
   
     .profile-container {
-      width: 100%;
+      max-width: 100%;
+    }
+    .nav-content{
+      max-width: fit-content;
+    }
+    .content{
+      max-width:100%;
     }
   
     /* Add more styles as needed */
