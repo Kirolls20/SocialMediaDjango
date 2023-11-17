@@ -26,7 +26,7 @@ from django.utils.decorators import method_decorator # To apply the csrf_exempt 
 
 
 from hitcount.views import HitCountDetailView
-class BlogHomeView(TemplateView):
+class BlogHomeView(LoginRequiredMixin,TemplateView):
     template_name= 'blog/blog_home.html'
 
     def get_context_data(self, **kwargs):
@@ -124,7 +124,7 @@ class BlogDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
         return reverse('blogs_home')
 
 
-class CreateCommentView(TemplateView):
+class CreateCommentView(LoginRequiredMixin,TemplateView):
     template_name = 'blog/blog_home.html'
 
     def post(self,request,**kwargs):
@@ -211,7 +211,7 @@ class AddBookmarkView(LoginRequiredMixin,SuccessMessageMixin,View):
                 messages.warning(self.request,'You already bookedmark this blog.')
                 return HttpResponseRedirect(reverse('blog_details',args=(blog.id,)))
 
-            
+    
 
 
 

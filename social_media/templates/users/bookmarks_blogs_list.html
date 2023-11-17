@@ -45,6 +45,15 @@
                     <li class="dropdown-item" style="text-align: center;" id="blog-{{blog.blog.id}}" onclick="hideBlog({{blog.blog.id}})">
                         <i class="fa-regular fa-eye-slash"></i>Hide
                     </li>
+                    <li class="dropdown-item" style="text-align: center;">
+                        <form action="{% url 'users:remove_blog_bookmark' blog.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">
+                                <i class="fa-solid fa-xmark"></i> Unsave
+                            </button>
+                        </form>
+                        
+                    </li>
             </ul>
         </div>           
         <!-- Delete Blog pop up  Container -->

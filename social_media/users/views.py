@@ -6,7 +6,11 @@ from django.urls import reverse
 from django.views import View
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView,DetailView, RedirectView, UpdateView,TemplateView
+from django.views.generic import (
+    ListView,DetailView, 
+    RedirectView, UpdateView,
+    TemplateView,DeleteView)
+
 from .models import User,UserSocialMeiaLink
 from .forms import UserUpdateForm,SocialMediaLinkFormSet 
 from blog.models import Bookmark as blog_bookmarks
@@ -131,5 +135,21 @@ class BookmarkQuestionListView(LoginRequiredMixin,TemplateView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         context['bookmarks_question_list'] = question_bookmarks.objects.filter(user=self.request.user). \
-        all().order_by('-pub_date')
+        all().order_by('-created_date')
         return context
+
+class RemoveBlogBookmarkView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
+    template_name = 'users/bookmarks_blogs_list.html' 
+    model = blog_bookmarks
+    success_message = ("Bookmark removed!")
+    
+    def get_success_url(self):
+        return reverse('users:blog_bookmarks')
+
+class RemoveBlogQuestionBookmarkView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
+    template_name = 'users/bookmarks_questions_list.html'
+    model = question_bookmarks
+    success_message = ("Bookmark removed!")
+
+    def get_success_url(self):
+        return reverse('users:question_bookmarks')

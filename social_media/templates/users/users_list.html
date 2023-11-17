@@ -28,6 +28,18 @@ home blog
               box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
               outline: none;
           }
+          .user-image{
+            width: 100px;
+            height:100px;
+            border-radius:20px;
+            background-repeat: no-repeat;
+            object-fit: cover;
+          }
+          @media screen and (max-width:758px) {
+            #user-card{
+              max-width: 200px;
+            }
+          }
         </style>
     {% endblock %}
     <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
@@ -41,21 +53,23 @@ home blog
   <button type="submit" class="btn btn-info">Search</button>
 </form>
 {% for user in users %}
-<div class="card mb-3" style="max-width: 500px;border-radius: 10px; height: auto; background-color: #242323">
+<div class="card mb-3" id= "user-card" style="max-width: 500px; max-height:200px; background-color: #242323;">
   <div class="row g-0">
       <div class="col-md-4">
         {% if user.profile_image %}
-            <img src="{{user.profile_image.url}}" class="img-fluid rounded-start" alt="">
+            <img src="{{user.profile_image.url}}" class="user-image">
         {% else %}
-            <img src="{% static 'images/default_profile_pic.jpg' %}" class="img-fluid rounded-start" style="width: 200px; height:200px;"alt="...">
+            <img src="{% static 'images/default_profile_pic.jpg' %}" class="user-image" alt="...">
         {% endif %}
       </div>
       <div class="col-md-8">
         <div class="card-body">
           <h5 class="card-title"><a href="{% url 'users:detail' user.username user.id %}" style="text-decoration: none;">{{user.username}}</a></h5>
           <p class="card-text">Software Developer</p>
-          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-        </div>
+          {% if user.last_login %}
+            <p class="card-text"><small class="text-body-secondary">Last Login: {{user.last_login|timesince}} ago</small></p>
+          {% endif %}
+          </div>
       </div>
     </div>
   </div>

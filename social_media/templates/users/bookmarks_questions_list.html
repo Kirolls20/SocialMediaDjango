@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-  Question Bookmarks
+    Question Bookmarks
 {% endblock title %}
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,12 +11,164 @@
           integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
-      <link href="{% static 'css/profile.css' %}" rel="stylesheet" /> 
       <link href="{% static 'css/blog_home.css' %}" rel="stylesheet" />    
   {% endblock %}
 </head>
 
 {% block content %}
+<body>
+
+<h2>Question Bookmarks {{bookmarks_question_list.count}}</h2>
+<main class="contianer">
+{% if bookmarks_question_list %}
+<section class="med-column">
+    {% for question in bookmarks_question_list %}
+   <div class="blog-post" id="{{question.question.id}}">
+       <!-- DropDown Menu -->
+       <div class="dropdown">
+        <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
+            <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+        </button>
+            <ul class="dropdown-menu" style="background-color:white ;">
+                {% if request.user == question.question.author %}
+                <!-- Edit Form --> 
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" style="text-align: center;" href="{% url 'update_question' question.question.id %}" >
+                            <i class="fa-solid fa-pencil"></i>Edit
+                        </a>
+                    </li>
+                    <!-- Delete Form  -->
+                    <li class="dropdown-item" id="delete" style="text-align: center;">
+                        <i class="fa-solid fa-trash" ></i>Delete
+                    </li> 
+                    {% endif %}
+                    <li class="dropdown-item" style="text-align: center;" id="blog-{{question.question.id}}" onclick="hideBlog({{question.question.id}})">
+                        <i class="fa-regular fa-eye-slash"></i>Hide
+                    </li>
+                    <li class="dropdown-item" style="text-align: center;">
+                        <form action="{% url 'users:remove_question_bookmark' question.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">
+                                <i class="fa-solid fa-xmark"></i> Unsave
+                            </button>
+                        </form>
+                        
+                    </li>
+            </ul>
+        </div>           
+        <!-- Delete Blog pop up  Container -->
+        <div class="delete-container">
+            <h3>Are You Sure you want to delete '{{question.question.title}}' Question</h3>
+            <form action="{% url 'delete_question' question.question.id %}" method="post">
+                {% csrf_token%}
+                <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+                <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">  
+            </form> 
+        </div>
+        <!-- Endof the Delete pop up -->
+        <div class="author">
+          <h6>
+              {% if question.question.author.profile_image %}
+              <img class="profile-image" src="{{blog.blog.author.profile_image.url }}" alt="{{request.user}}">
+              {% else %}
+              <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+              {% endif %} 
+              <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{question.question.author}} </a>
+              {% if question.question.author.job_title %} 
+                  <h6 class="text-muted" >{{ question.question.author.job_title }} . {{question.question.pub_date|timesince}} (reposted) </h6>
+                  {% endif %}
+          </h6>
+          
+          
+    </div>
+    {% if question.question.reposted %}
+        <h6 class="text-muted"> from 
+         {% if question.question.original_post.author.profile_image %}
+         <img class="profile-image-reposted" src="{{question.question.original_post.author.profile_image.url }}" alt="image">
+         {% else %}
+         <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+         {% endif %}
+         {{question.question.original_post.author.username}}
+      </h6>
+     {% endif %}
+     {% if question.question.tags.all %}
+     <p class="tags" style="float:left;">Tags: {% for tag in question.question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+     {% endif %} <br>
+     <!-- Blog title  -->
+     <a href="{% url 'question_detail' question.question.id %}" class="title">
+         <h1 >{{question.question.question}}</h1>
+     </a>
+      <div class="body">
+     </div>
+            <!-- Add more content here -->
+        <div class="actions-nums">
+          <h6 class="text-muted" id="likes-count-{{ question.question.id }}">{{question.question.likes.all.count}} Likes</h6>
+          <h6 class="text-muted">
+              {{question.question.answers.all.count}} Answers
+          </h6>
+          <h6 class="text-muted" id="repost-count-{{question.question.id}}">{{question.question.repost}} Reposts</h6>
+      </div>
+      <div class="actions">
+        <!-- Likes -->
+        <div class="like-container">
+            <button data-question-id='{{ question.question.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+               {% if request.user in question.question.likes.all %}
+                <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% else %}
+                <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% endif %}
+            </button>
+            <span id="likes-count-{{question.question.id}}">{{ likes_count }}</span>
+            <div class="comments" style="display: inline-block; margin-left:10px;"> 
+                <!-- Answers -->
+                {% if request.user in question.question.answers.all %}
+                <a href="#" style="text-decoration: none;">
+                    <i class="fa-solid fa-comment fa-2xl"></i>
+                </a>
+                {% else %}
+                <a href="#" style="text-decoration: none; ">
+                    <i class="fa-regular fa-comment fa-2xl"></i>
+                </a>
+                {% endif %}
+                <!--Repost Question  -->
+                <div class="repost"  id="repost-container-{{question.question.id}}" style="display:inline-block; margin-top:10px;">
+                    <button id="repost-btn" data-repost-id ="{{question.question.id}}"  data-csrf-token='{% csrf_token %}'>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                          </svg>
+                        </button>
+                    </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        
+        {% endfor %}
+      </section>
+  {% else %}
+  <h5>Empty</h5>
+  {% endif %}
+  {% block javascript %}
+  
+  
+  <!-- Bootstrap JS -->
+  
+  <!-- Your stuff: Third-party javascript libraries go here -->
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+crossorigin="anonymous"></script>
+<!-- place project specific Javascript in this file -->
+<script src="{% static 'js/read_more.js' %}"></script>
+<script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/repost_blog.js' %}"></script>
+<script src="{% static 'js/hide_blog.js' %}"></script>
+<script defer src="{% static 'js/project.js' %}"></script>
+<script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
 
 {% endblock %}
-
+</main>
+</body>
+{% endblock %}

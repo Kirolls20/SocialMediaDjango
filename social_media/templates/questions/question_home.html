@@ -146,7 +146,7 @@ Questions
                         <span id="likes-count-{{question.id}}">{{ likes_count }}</span>
                         <div class="comments" style="display: inline-block; margin-left:10px;"> 
                             <!-- Answers -->
-                            {% if request.user in blog.comments.all %}
+                            {% if request.user in question.answers.all %}
                             <a href="#" style="text-decoration: none;">
                                 <i class="fa-solid fa-comment fa-2xl"></i>
                             </a>

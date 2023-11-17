@@ -15,5 +15,7 @@ urlpatterns = [
     path('search/<str:input>/all',views.UserSearchView.as_view(),name='search_users'),
     path('bookmarks/blog/list/',views.BookmarkBlogListView.as_view(),name='blog_bookmarks'),
     path('bookmarks/question/list/',views.BookmarkQuestionListView.as_view(),name='question_bookmarks'),
+    path('remove/bookmark-blog/<int:pk>/',views.RemoveBlogBookmarkView.as_view(),name='remove_blog_bookmark'),
+    path('remove/bookmark-question/<int:pk>/',views.RemoveBlogQuestionBookmarkView.as_view(),name='remove_question_bookmark'),
     
 ]
