@@ -30,8 +30,8 @@ Questions
         </section>
         <section class="med-column">
             <!-- Search by tags  -->
-        <form action="{% url 'search' input='default_value' %}" method="get">
-            <input type="search" name="input" id="input" class="search-input" placeholder="Search by tags or titles">
+        <form action="{% url 'search_question' input='default_value' %}" method="get">
+            <input type="search" name="input" id="input" class="search-input" placeholder="Search by Question or tags">
             <button type="submit" class="btn btn-info">Search</button>
         </form>
         <!-- Create new post or question -->
@@ -106,7 +106,7 @@ Questions
             {% if question.tags.all %}
             <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
-            <p class="date">Date: {{question.pub_date}}</p>
+            <p class="date">Date: {{question.pub_date|timesince}}</p>
             <div class="body">
                 <a href="{% url 'question_detail' question.id %}" class="title">
                     <h1>{{question.question}}</h1>

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q
 from django.views.generic import TemplateView,DetailView,View
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -152,4 +152,15 @@ class BookmarkQuestionView(LoginRequiredMixin,View):
             else:
                 messages.warning(self.request,'You already bookedmark this blog.')
                 return HttpResponseRedirect(reverse('question_detail',args=(question.id,)))
-         
+class SearchQuestionView(LoginRequiredMixin,TemplateView):
+    template_name = 'questions/question_search.html'
+    def get(self,*args, **kwargs):
+        if self.request.method =='GET':
+            input_value = self.request.GET.get('input')
+            if input_value:
+                qs_results = Question.objects.filter(
+                    Q(tags__name = input_value) | Q(question__icontains=input_value)
+                )
+                return render(self.request,self.template_name,{'qs_results':qs_results})
+            else:
+                return reverse('search', args=['', 'all']) 

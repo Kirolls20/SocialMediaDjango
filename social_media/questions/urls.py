@@ -12,5 +12,6 @@ urlpatterns = [
    path('<int:pk>/repost/',views.RepostQuestionView.as_view(),name='repost_question'),
    path('<int:pk>/answer/like/',views.LikeAnswerView.as_view(),name='vote_answer'),
    path('<int:pk>/bookmark/',views.BookmarkQuestionView.as_view(),name='bookmark_question'),
+   path('<str:input>/search/all/',views.SearchQuestionView.as_view(),name='search_question'),
    
 ]

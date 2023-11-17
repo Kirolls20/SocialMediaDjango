@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+home blog
+{% endblock %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        <link href="{% static 'css/blog_home.css' %}" rel="stylesheet" />
+    {% endblock %}
+    <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+</head>
+
+{% block content %}
+
+
+<main class="content">
+   <h1>Search Results ({{qs_results.all.count}})</h1>
+  {% if qs_results %}
+  {% for result in qs_results %}
+ <div class="blog-post" id="{{result.id}}">
+
+      <!-- Endof the Delete pop up -->
+     
+      <h6 class="author">
+        {% if result.author.profile_image %}
+            <img class="profile-image" src="{{result.author.profile_image.url }}" alt="{{result.author}}">
+        {% else %}
+            <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+        {% endif %} 
+        <a href="{% url 'users:detail' result.author result.author.id %}" style="font-weight: 500;">{{blog.author}}</a>
+   
+        {{result.author}}
+    </h6>
+    <!-- if the blog reposted  -->
+ {% if result.reposted %}
+ <h6 class="text-muted">(reposted) from </h6>
+    {% if result.original_question.author.profile_image %}
+    <img class="profile-image-reposted" src="{{result.original_question.author.profile_image.url }}" alt="image">
+    {% else %}
+    <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+    {% endif %}
+    {{result.original_question.author.username}}
+    
+{% endif %} 
+
+{% if result.tags.all %}
+<p class="author">Tags: {% for tag in result.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+{% endif %}
+<p class="date">{{result.pub_date|timesince}} ago</p>
+<div class="body">
+    <a href="{% url 'question_detail' result.id %}" class="title">
+        <h1>{{result.question}}</h1>
+    </a> <br>
+</div>
+      <div class="actions-nums">
+        <h6 class="text-muted" id="likes-count-{{ result.id }}">
+            {{result.likes.all.count}} Likes
+        </h6>
+        <h6 class="text-muted">
+            <a href="{% url 'question_detail' result.id %}" class="text-muted">
+                {{result.answers.all.count}} Answers
+            </a>
+        </h6>
+        <h6 class="text-muted" id="repost-count-{{result.id}}">
+            {{result.repost_count}} Reposts
+        </h6>
+    </div>
+    <div class="actions">
+        <!-- Likes -->
+        <div class="like-container">
+            <button data-question-id='{{ result.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+               {% if request.user in result.likes.all %}
+                <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% else %}
+                <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% endif %}
+            </button>
+            <span id="likes-count-{{result.id}}">{{ likes_count }}</span>
+            <div class="comments" style="display: inline-block; margin-left:10px;"> 
+                <!-- Answers -->
+                {% if request.user in result.answers.all %}
+                <a href="#" style="text-decoration: none;">
+                    <i class="fa-solid fa-comment fa-2xl"></i>
+                </a>
+                {% else %}
+                <a href="#" style="text-decoration: none; ">
+                    <i class="fa-regular fa-comment fa-2xl"></i>
+                </a>
+                {% endif %}
+                <!--Repost Question  -->
+                <div class="repost"  id="repost-container-{{result.id}}" style="display:inline-block; margin-top:10px;">
+                    <button id="repost-btn" data-repost-id ="{{result.id}}"  data-csrf-token='{% csrf_token %}'>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                          </svg>
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <form action="{% url 'answer_question' result.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="answer" id="comment" placeholder="type your answer here..">
+        <button class="comment-btn" type="submit">Answer</button>
+    </form>
+      </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <h3>No query matches your search </h3>
+  {% endif %}
+</main>
+
+
+{% block javascript %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+        crossorigin="anonymous"></script>
+        <!-- place project specific Javascript in this file -->
+        <script src="{% static 'js/like_question.js' %}"></script>
+        <script src="{% static 'js/repost_question.js' %}"></script>
+        <script defer src="{% static 'js/project.js' %}"></script>
+        <script src="{% static 'js/hide_question.js' %}"></script>
+        <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+    {% endblock %}
+{% endblock %}

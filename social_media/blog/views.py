@@ -181,7 +181,7 @@ class CommentListView(LoginRequiredMixin,TemplateView):
         context['comments'] = Comment.objects.filter(blog=blog)
         return context
 
-class SearchView(TemplateView):
+class SearchView(LoginRequiredMixin,TemplateView):
     template_name= 'blog/blog_search_results.html'
     
     def get(self, *args, **kwargs):
@@ -196,7 +196,6 @@ class SearchView(TemplateView):
                 return reverse('search', args=['', 'all']) 
 
 class AddBookmarkView(LoginRequiredMixin,SuccessMessageMixin,View):
-
 
     def post(self,request,**kwargs):
         user= self.request.user
