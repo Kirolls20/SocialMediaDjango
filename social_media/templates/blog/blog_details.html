@@ -35,7 +35,6 @@ blog details
                         </button>
                     </form>
                 </div>
-                <h1 class="title">{{blog.title}}</h1>
                 <div class="author">
                     <h6>
                         {% if blog.author.profile_image %}
@@ -48,6 +47,7 @@ blog details
                             <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} </h6>
                             {% endif %}
                             <p class="date"> Views: {{ hitcount.total_hits }}</p>
+                    <h1 class="title">{{blog.title}}</h1>
                 {% if blog.tags.all %}
                 <p class="tags">Tags: {% for tag in blog.tags.all%} <span class="tag">{{tag}}</span> {% if not forloop.last %}, {% endif %}{% endfor %}</p>
                             
@@ -69,21 +69,26 @@ blog details
                 <div class="blog-details">
                     <button data-blog-id='{{ blog.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>                       
                         {% if request.user in blog.likes.all %}
-                        <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i> <span class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</span>
+                        <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i>
                         {% else %}
-                        <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i> <span class="text-muted" id="likes-count-{{ blog.id }}">{{blog.likes.all.count}} Likes</span>
+                        <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i>
                         {% endif %}
                     </button>
+                    <h6 class="text-muted" id="likes-count-{{ blog.id }}" style="display:inline-block;">{{blog.likes.all.count}} Likes</h6>
                     <div class="comments" style="display: inline; margin-left:10px;"> 
                         {% if request.user in blog.comments.all %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none;">
-                            <i class="fa-solid fa-comment fa-xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-solid fa-comment fa-xl"></i>
                         </a>
                         {% else %}
                         <a href="{% url 'comment_list' blog.id %}" style="text-decoration: none; ">
-                            <i class="fa-regular fa-comment fa-2xl"></i>{{blog.comments.all.count}}
+                            <i class="fa-regular fa-comment fa-2xl"></i>
                         </a>
                         {% endif %}
+                        <h6 class="text-muted" style="display:inline-block;">
+                            <a href="{% url 'comment_list' blog.id %}" class="text-muted" >
+                                {{blog.comments.all.count}} Comment
+                            </a>
                     </div>
                 </div>
                 <hr>
@@ -109,7 +114,14 @@ blog details
                       Comments- {{blog.comments.all.count}}
                     </button>
                     {% for comment in comments %}
-                    <button type="button" class="list-group-item list-group-item-action">{{comment.user.username}} - {{comment.comment}}</button>
+                    <button type="button" class="list-group-item list-group-item-action">
+                        {% if comment.user.profile_image %}
+                        <img class="profile-image-thumb" src="{{comment.user.profile_image.url }}" alt="{{comment.user}}">
+                        {% else %}
+                        <img  class="profile-image-thumb" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+                        {% endif %} 
+    
+                        <a href="{% url 'users:detail' comment.user comment.user.id %}" class="text-muted">{{comment.user.username}}</a>-   {{comment.comment}}</button>
                     {% endfor %}
                 </div>
             </div>   

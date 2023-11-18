@@ -60,16 +60,32 @@ Question Details
     
                     </form>
                 </div>
-                <div class="blog-details">
-                    <button id='like-button' data-question-id='{{question.id}}' data-csrf-token='{% csrf_token %}' style='background-color: inherit; border:0;'>
-                       {% if request.user in question.likes.all %}
-                        <i class="fa-solid fa-heart fa-xl" style="color: #d62069;"></i>
-                        {% else %}
-                        <i class="fa-regular fa-heart fa-xl" style="color: #d62069;"></i>
-                        {% endif %}
-                    </button>
-                    <span id="likes-count">{{ count_likes }}</span>  
-                </div>
+                <div class="like-container">
+                    <button data-question-id='{{ question.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+                        {% if request.user in question.likes.all %}
+                         <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                         {% else %}
+                         <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                         {% endif %}
+                     </button>
+                        <h6 class="text-muted" id="likes-count-{{ question.id }}"  style="display: inline-block;">
+                            {{question.likes.all.count}} Likes
+                        </h6>
+                     <div class="comments" style="display: inline-block;"> 
+                         <!-- Answers -->
+                         {% if request.user in question.answers.all %}
+                         <a href="#" style="text-decoration: none;">
+                             <i class="fa-solid fa-comment fa-2xl"></i>
+                         </a>
+                         {% else %}
+                         <a href="#" style="text-decoration: none; ">
+                             <i class="fa-regular fa-comment fa-2xl"></i>
+                         </a>
+                         {% endif %}
+                        </div>
+                            <h6 class="text-muted" style="display: inline-block;">
+                            {{question.answers.all.count}} Answers
+                        </h6>
                 <hr>
                 <div class="answers">
                     {% if answers %}

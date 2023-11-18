@@ -63,11 +63,11 @@ home blog
         {% endif %}
       </div>
       <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title"><a href="{% url 'users:detail' user.username user.id %}" style="text-decoration: none;">{{user.username}}</a></h5>
-          <p class="card-text">Software Developer</p>
+        <div class="card-body" style="padding:0;">
+          <h5 class="card-title"><a href="{% url 'users:detail' user.username user.id %}" style="color:aliceblue;font-size: large; text-decoration: none;">{{user.username}}</a></h5>
+          <p class="text-muted">Software Developer</p>
           {% if user.last_login %}
-            <p class="card-text"><small class="text-body-secondary">Last Login: {{user.last_login|timesince}} ago</small></p>
+            <p class="card-text"><small class="text-body-secondary">Last Login: <span class="text-muted">{{user.last_login|timesince}} ago</span></small></p>
           {% endif %}
           </div>
       </div>
