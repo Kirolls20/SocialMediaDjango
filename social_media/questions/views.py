@@ -127,15 +127,15 @@ class RepostQuestionView(LoginRequiredMixin,View):
                 author =user,
                 question = question_id.question ,
                 original_question= question_id,
-                reposed=True
+                reposted=True
             )
             repost_new_question.save()
             question_id.repost_count +=1
             question_id.save()
+            return JsonResponse({'repost_count':question_id.repost_count})
         except Exception as e:
             print('Error',e)
             
-        return JsonResponse({'repost_count':question_id.repost_count})
 
 
 class BookmarkQuestionView(LoginRequiredMixin,View):
