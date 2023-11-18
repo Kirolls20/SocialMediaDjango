@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Home
+{% endblock %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block css %}
+    <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
+            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+        <!-- This is custom css static file  -->
+        <link href="{% static 'css/blog_home.css' %}" rel="stylesheet" />
+    {% endblock %}
+    <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+    <style>
+        @media screen and (max-width:768) {
+            body{
+                font-size: 14px;;
+            }
+            .container{
+                max-width: fit-content;
+
+            }
+        }
+    </style>
+</head>
+{% block content %}
+<body>
+    <main class="container">
+        <section class="left-column" >
+            <div style="position: fixed;">
+            </div>
+    <h3>Feeds</h3>
+{% for item in random_feeds %}
+{% if item.title %}
+<section class="med-column">
+<div class="blog-post" id="{{item.id}}">
+    <!-- DropDown Menu -->
+    <div class="dropdown">
+        <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
+            <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+        </button>
+            <ul class="dropdown-menu" style="background-color:white ;">
+                {% if request.user == item.author %}
+                <!-- Edit Form --> 
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" style="text-align: center;" href="{% url 'update_blog' item.id %}" >
+                            <i class="fa-solid fa-pencil"></i>Edit
+                        </a>
+                    </li>
+                    <!-- Delete Form  -->
+                    <li class="dropdown-item" id="delete" style="text-align: center;">
+                        <i class="fa-solid fa-trash" ></i>Delete
+                    </li> 
+                    {% endif %}
+                    <li class="dropdown-item" style="text-align: center;" id="blog-{{item.id}}" onclick="hideBlog({{blog.id}})">
+                        <i class="fa-regular fa-eye-slash"></i>Hide
+                    </li>
+                <li class="dropdown-item">
+                    <form action="{% url 'bookmark' item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item" name="bookmark">
+                            <i class="fa-regular fa-bookmark"></i>Bookmark
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>       
+    <!-- Delete Blog pop up  Container -->
+    <div class="delete-container">
+        <h3>Are You Sure you want to delete '{{item.title}}' Blog</h3>
+        <form action="{% url 'delete_blog' item.id %}" method="post">
+            {% csrf_token%}
+            <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+            <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+            
+        </form> 
+    </div>
+    <!-- Endof the Delete pop up -->
+    <div class="author">
+        <h6>
+            {% if item.author.profile_image %}
+            <img class="profile-image" src="{{item.author.profile_image.url }}" alt="{{item.author}}">
+            {% else %}
+            <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+            {% endif %} 
+            <a href="{% url 'users:detail' item.author item.author.id %}" style="font-weight: 500;">{{item.author}} </a>
+            {% if item.author.job_title %}
+                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|timesince}} ago</h6>
+                {% endif %}
+        </h6>
+    </div>
+     <!-- if the blog reposted  -->
+     {% if item.reposted %}
+     <h6 class="text-muted">(reposted) from </h6>
+        {% if item.original_post.author.profile_image %}
+        <img class="profile-image-reposted" src="{{item.original_post.author.profile_image.url }}" alt="image">
+        {% else %}
+        <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+        {% endif %}
+        {{item.original_post.author.username}}
+        
+    {% endif %} <br>
+     
+    <span id="blog">Blog</span>
+    <!-- Blog title  -->
+    <a href="{% url 'blog_details' item.id %}" class="title">
+        <h1 >{{item.title}}</h1>
+    </a>
+   
+    {% if item.tags.all %}
+    <p class="tags">Tags: {% for tag in item.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+    <div class="body">
+        {% with max_length=200 %} 
+            {% if item.body|length > max_length %}
+                <div class="truncated-text">
+                    {{item.body|safe|slice:max_length}} ...
+                    <a href="" class="read-more-link">Read More</a>
+                </div>       
+                <div class="full-text" style="display:none">{{item.body|safe}}</div>
+                <a href="" class="read-less-link" style="display: none;"> ...Read less</a>
+        <!-- Add more content here -->
+            {% else %}
+            {{item.body|safe}}
+            {% endif %}
+        {% endwith %}
+        {% if item.image %}
+        <div class="image-container">
+            <img src="{{item.image.url}}" alt="image" class="blog-image">
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="comment-container">
+        <form action="{% url 'create_comment' item.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="comment" id="comment" placeholder="type your comment here..">
+            <button class="comment-btn" type="submit">Comment</button>
+        </form>
+    </div>
+    <div class="actions-nums">
+        <h6 class="text-muted" id="likes-count-{{ item.id }}">{{item.likes.all.count}} Likes</h6>
+        <h6 class="text-muted">
+            <a href="{% url 'comment_list' item.id %}" class="text-muted">
+                {{item.comments.all.count}} Comment
+            </a>
+        </h6>
+        <h6 class="text-muted" id="repost-count-{{blog.id}}">{{item.repost}} Reposts</h6>
+    </div>
+    <div class="actions">            
+        <div class="blog-details">
+            <button data-blog-id='{{ item.id }}' id='like-button' data-csrf-token='{% csrf_token %}'>                   
+                {% if request.user in item.likes.all %}
+                <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% else %}
+                <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                {% endif %}
+            </button>
+        </div>
+            <div class="comments" style="display: inline; margin-left:10px;"> 
+                {% if request.user in item.comments.all %}
+                <a href="{% url 'comment_list' item.id %}" style="text-decoration: none;">
+                    <i class="fa-solid fa-comment fa-2xl"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'comment_list' item.id %}" style="text-decoration: none; ">
+                    <i class="fa-regular fa-comment fa-2xl"></i>
+                </a>
+                {% endif %}
+            </div>
+            <div class="repost"  id="repost-container-{{item.id}}" style="display:inline-block;" >
+            <button id="repost-btn" data-repost-id ="{{item.id}}"  data-csrf-token='{% csrf_token %}'>
+                
+                <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                  </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+{% elif item.question %}
+<section class="med-column">
+<div class="blog-post" id="{{item.id}}">
+    <!-- DropDown Menu -->
+    <div class="dropdown">
+        <button  data-bs-toggle="dropdown" aria-expanded="false" style="float:right; border:0; background-color:inherit;">
+            <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
+        </button>
+            <ul class="dropdown-menu" style="background-color:white ;">
+                {% if request.user == item.author %}
+                <!-- Edit Form --> 
+                    <li class="dropdown-item" ><a href="{% url 'update_question' item.id %}" style="text-decoration: none;">Edit</a></li>
+                    <!-- Delete Form  -->
+                    <li class="dropdown-item" id="delete" style="color:#000; font-weight:bolder;">Delete</li> 
+                    {% endif %}
+                    <li class="dropdown-item" id="question-{{item.id}}" onclick="hideQuestion({{item.id}})">Hide</li>
+                    <li class="dropdown-item" >
+                        <form action="{% url 'bookmark_question' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item" name="bookmark">
+                                <i class="fa-regular fa-bookmark"></i>Bookmark
+                            </button>
+                        </form>
+                    </li>
+            </ul>
+        </div>       
+    <!-- Delete Blog pop up  Container -->
+    <div class="delete-container" style="position: relative;">
+        <h3>Are You Sure you want to delete '{{item.question}}'</h3>
+        <form action="{% url 'delete_question' item.id %}" method="post">
+            {% csrf_token%}
+            <input type="submit" id='delete-blog' value="Delete" class="btn btn-danger" name="delete">
+            <input type="button" id='cancel' value="Cancel" class="btn btn-light" name="cancel">
+        </form> 
+    </div>
+    <!-- Endof the Delete pop up -->
+    <div class="author">
+        <h6>
+            {% if item.author.profile_image %}
+            <img class="profile-image" src="{{item.author.profile_image.url }}" alt="{{item.author}}">
+            {% else %}
+            <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
+            {% endif %} 
+            <a href="{% url 'users:detail' item.author item.author.id %}" style="font-weight: 500;">{{item.author}} </a>
+            {% if item.author.job_title %}
+                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|timesince}} ago</h6>
+                {% endif %}
+        </h6>
+    </div>
+        <!-- if the blog reposted  -->
+     {% if item.reposted %}
+     <h6 class="text-muted">(reposted) from </h6>
+        {% if item.original_question.author.profile_image %}
+        <img class="profile-image-reposted" src="{{item.original_question.author.profile_image.url }}" alt="image">
+        {% else %}
+        <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
+        {% endif %}
+        {{item.original_question.author.username}}
+        
+    {% endif %} 
+    <span id="question">Question</span>
+    {% if item.tags.all %}
+    <p class="author">Tags: {% for tag in item.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+    <div class="body">
+        <a href="{% url 'question_detail' item.id %}" class="title">
+            <h1>{{item.question}}</h1>
+        </a> <br>
+        <form action="{% url 'answer_question' item.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="answer" id="comment" placeholder="type your answer here..">
+            <button class="comment-btn" type="submit">Answer</button>
+        </form>
+        <div class="actions-nums">
+            <h6 class="text-muted" id="likes-count-{{ item.id }}">
+                {{item.likes.all.count}} Likes
+            </h6>
+            <h6 class="text-muted">
+                <a href="{% url 'question_detail' item.id  %}" class="text-muted">
+                    {{item.answers.all.count}} Answers
+                </a>
+            </h6>
+            <h6 class="text-muted" id="repost-count-{{item.id}}">
+                {{item.repost_count}} Reposts
+            </h6>
+        </div>
+        <div class="actions">
+            <!-- Likes -->
+            <div class="like-container">
+                <button data-question-id='{{ item.id }}' style='background-color: inherit; border:0;' id='like-button' data-csrf-token='{% csrf_token %}'>
+                   {% if request.user in item.likes.all %}
+                    <i class="fa-solid fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% else %}
+                    <i class="fa-regular fa-heart fa-2xl" style="color: #d62069;"></i>
+                    {% endif %}
+                </button>
+                <span id="likes-count-{{item.id}}">{{ likes_count }}</span>
+                <div class="comments" style="display: inline-block; margin-left:10px;"> 
+                    <!-- Answers -->
+                    {% if request.user in item.answers.all %}
+                    <a href="#" style="text-decoration: none;">
+                        <i class="fa-solid fa-comment fa-2xl"></i>
+                    </a>
+                    {% else %}
+                    <a href="#" style="text-decoration: none; ">
+                        <i class="fa-regular fa-comment fa-2xl"></i>
+                    </a>
+                    {% endif %}
+                    <!--Repost Question  -->
+                    <div class="repost"  id="repost-container-{{item.id}}" style="display:inline-block; margin-top:10px;">
+                        <button id="repost-btn" data-repost-id ="{{item.id}}"  data-csrf-token='{% csrf_token %}'>
+                            <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;" width="30" height="30" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                              </svg>
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endfor %}
+<section class="right-column">
+    <div style="position: fixed;">
+        <h5>Recently Published</h5>
+    </div>        
+</section>
+</main>
+</body>
+
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+crossorigin="anonymous"></script>
+<!-- place project specific Javascript in this file -->  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script defer src="{% static 'js/project.js' %}"></script>
+  <script src="{% static 'js/vote.js' %}"></script>
+  <script defer src="{% static 'js/profile_single_page.js' %}"></script>
+  <script src="{% static 'js/read_more.js' %}"></script>
+  <script src="{% static 'js/like.js' %}"></script>
+  <script src="{% static 'js/repost_blog.js' %}"></script>
+  <script src="{% static 'js/hide_blog.js' %}"></script>
+  <script src="{% static 'js/like_question.js' %}"></script>
+  <script src="{% static 'js/repost_question.js' %}"></script>
+  <script src="{% static 'js/hide_question.js' %}"></script>
+  <script src="https://kit.fontawesome.com/6fa36f3b85.js" crossorigin="anonymous"></script>
+{% endblock %}
+    </body>
+    {% endblock %}

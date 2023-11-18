@@ -19,6 +19,22 @@ from questions.models import Bookmark as question_bookmarks
 from blog.models import Blog,Comment
 from questions.models import Question,Answer
 
+import random
+
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        blogs = Blog.objects.all()
+        questions = Question.objects.all()
+        random_feeds = list(blogs) + list(questions)
+        random.shuffle(random_feeds)
+        print(random_feeds)
+        context['random_feeds'] = random_feeds
+
+        return context
+
 class UserDetailView(LoginRequiredMixin, DetailView):
     template_name = 'users/user_profile.html'
     model = User
