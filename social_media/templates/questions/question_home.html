@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 Questions
 {% endblock %}
@@ -87,9 +87,9 @@ Questions
                     {% else %}
                         <img  class="profile-image" src="{% static 'images/default_profile_pic.jpg' %}" alt="">
                     {% endif %} 
-                    <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
+                    <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{question.author}}</a>
                
-                    {{question.author}}
+                    <h6 class="text-muted" >{{ question.author.job_title }} . {{question.pub_date|naturaltime}} </h6>
                 </h6>
                 <!-- if the blog reposted  -->
              {% if question.reposted %}
@@ -106,7 +106,6 @@ Questions
             {% if question.tags.all %}
             <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
-            <p class="date">Date: {{question.pub_date|timesince}}</p>
             <div class="body">
                 <a href="{% url 'question_detail' question.id %}" class="title">
                     <h1>{{question.question}}</h1>

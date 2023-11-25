@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% load hitcount_tags  %}
 {% block title %}
 blog details
@@ -44,7 +45,7 @@ blog details
                         {% endif %} 
                         <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}} </a>
                         {% if blog.author.job_title %}
-                            <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} </h6>
+                            <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date|naturaltime}} </h6>
                             {% endif %}
                             <p class="date"> Views: {{ hitcount.total_hits }}</p>
                     <h1 class="title">{{blog.title}}</h1>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 home blog
 {% endblock %}
@@ -39,7 +39,7 @@ home blog
             {% endif %} 
             <a href="{% url 'users:detail' result.author result.author.id %}" style="font-weight: 500;">{{result.author}} </a>
             {% if result.author.job_title %}
-                <h6 class="text-muted" >{{ result.author.job_title }} . {{result.pub_date|timesince}} ago</h6>
+                <h6 class="text-muted" >{{ result.author.job_title }} . {{result.pub_date|naturaltime}} </h6>
                 {% endif %}
         </h6>
     </div>

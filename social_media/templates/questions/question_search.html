@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 home blog
 {% endblock %}
@@ -39,7 +39,7 @@ home blog
         {% endif %} 
         <a href="{% url 'users:detail' result.author result.author.id %}" style="font-weight: 500;">{{blog.author}}</a>
    
-        {{result.author}}
+        <h6 class="text-muted" >{{ result.author.job_title }} . {{result.pub_date|naturaltime}} </h6>
     </h6>
     <!-- if the blog reposted  -->
  {% if result.reposted %}
@@ -56,7 +56,7 @@ home blog
 {% if result.tags.all %}
 <p class="author">Tags: {% for tag in result.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
 {% endif %}
-<p class="date">{{result.pub_date|timesince}} ago</p>
+
 <div class="body">
     <a href="{% url 'question_detail' result.id %}" class="title">
         <h1>{{result.question}}</h1>

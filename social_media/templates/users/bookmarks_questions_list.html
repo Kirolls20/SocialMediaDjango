@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}
     Question Bookmarks
 {% endblock title %}
@@ -75,7 +76,7 @@
               {% endif %} 
               <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{question.question.author}} </a>
               {% if question.question.author.job_title %} 
-                  <h6 class="text-muted" >{{ question.question.author.job_title }} . {{question.question.pub_date|timesince}} (reposted) </h6>
+                  <h6 class="text-muted" >{{ question.question.author.job_title }} . {{question.question.pub_date|naturaltime}}  </h6>
                   {% endif %}
           </h6>
           

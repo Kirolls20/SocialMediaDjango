@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}
   User:{{ object.username }}
 {% endblock title %}
@@ -165,7 +166,7 @@
                   {% endif %} 
                   <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}} </a>
                   {% if blog.author.job_title %} 
-                      <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date}} (reposted) </h6>
+                      <h6 class="text-muted" >{{ blog.author.job_title }} . {{blog.pub_date|naturaltime}}</h6>
                       {% endif %}
               </h6> 
         </div>
@@ -297,12 +298,11 @@
             {% endif %} 
             <a href="{% url 'users:detail' request.user request.user.id %}" style="font-weight: 500;">{{blog.author}}</a>
        
-            {{question.author}}
+            <h6 class="text-muted" >{{ question.author.job_title }} . {{question.pub_date|naturaltime}} </h6>
         </h6>
     {% if question.tags.all %}
     <p class="author">Tags: {% for tag in question.tags.all%}<span class="tag">{{tag}}</span>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
     {% endif %}
-    <p class="date">Date: {{question.pub_date}}</p>
     <div class="body">
         <a href="{% url 'question_detail' question.id %}" class="title">
             <h1>{{question.question}}</h1>

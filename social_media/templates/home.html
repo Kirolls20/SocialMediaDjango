@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize  %}
 {% block title %}
     Home
 {% endblock %}
@@ -91,7 +92,7 @@
             {% endif %} 
             <a href="{% url 'users:detail' item.author item.author.id %}" style="font-weight: 500;">{{item.author}} </a>
             {% if item.author.job_title %}
-                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|timesince}} ago</h6>
+                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|naturaltime}} </h6>
                 {% endif %}
         </h6>
     </div>
@@ -104,7 +105,7 @@
         <img  class="profile-image-reposted" src="{% static 'images/default_profile_pic.jpg' %}" alt="image">
         {% endif %}
         {{item.original_post.author.username}}
-        
+    
     {% endif %} <br>
      
     <span id="blog">Blog</span>
@@ -232,7 +233,7 @@
             {% endif %} 
             <a href="{% url 'users:detail' item.author item.author.id %}" style="font-weight: 500;">{{item.author}} </a>
             {% if item.author.job_title %}
-                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|timesince}} ago</h6>
+                <h6 class="text-muted" >{{ item.author.job_title }} . {{item.pub_date|naturaltime}}</h6>
                 {% endif %}
         </h6>
     </div>

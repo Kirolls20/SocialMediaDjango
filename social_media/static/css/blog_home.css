@@ -51,6 +51,9 @@
 #new-blog-btn:hover{
     background-color: #0056b3;
 }
+.repost-container{
+  border:1px solid #ddd;
+}
 button {
     background-color: #3498db;
     color: #fff;
