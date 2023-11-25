@@ -20,7 +20,7 @@ class QuestionsHomeView(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['questions'] = Question.objects.all().order_by('?')
+        context['questions'] = Question.objects.all().order_by('-pub_date')
         context['recent_question'] = Question.objects.order_by('-pub_date')[:5]
         return context
 

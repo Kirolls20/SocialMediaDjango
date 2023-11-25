@@ -32,7 +32,7 @@ class BlogHomeView(LoginRequiredMixin,TemplateView):
     def get_context_data(self, **kwargs):
       
         context = super().get_context_data(**kwargs)
-        context['home_blogs'] = Blog.objects.all().order_by('?')
+        context['home_blogs'] = Blog.objects.all().order_by('-pub_date')
         context['recent_blogs'] = Blog.objects.all().order_by('-pub_date')[:4]
         
         # Query to get the most repeated tags for last 7 days
