@@ -51,8 +51,12 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dj_social_media_db',
+        'USER': 'postgres',
+        'PASSWORD': 'kokosabri123',
+        'HOST': 'localhost',
+        'PORT': '5434',
     }
 }
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD

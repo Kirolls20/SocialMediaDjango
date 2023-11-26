@@ -6,12 +6,20 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS",'.vercel.app')
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS",['.vercel.app','localhost','http://127.0.0.1:8000/'])
 
 # DATABASES
 # ------------------------------------------------------------------------------
-DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa: F405
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dj_social_media_db',
+        'USER': 'postgres',
+        'PASSWORD': 'kokosabri123',
+        'HOST': 'localhost',
+        'PORT': '5434',
+    }
+}
 # CACHES
 # ------------------------------------------------------------------------------
 CACHES = {
